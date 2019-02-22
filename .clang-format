@@ -1,0 +1,19 @@
+﻿---
+BasedOnStyle: WebKit
+AccessModifierOffset: '-4'
+AllowShortFunctionsOnASingleLine: Empty
+AllowShortIfStatementsOnASingleLine: 'false'
+AllowShortLoopsOnASingleLine: 'false'
+AlwaysBreakAfterDefinitionReturnType: None
+AlwaysBreakAfterReturnType: None
+AlwaysBreakTemplateDeclarations: 'true'
+BreakBeforeBraces: Allman
+ColumnLimit: '100'
+MaxEmptyLinesToKeep: '2'
+NamespaceIndentation: All
+SpaceBeforeParens: ControlStatements
+SpacesInAngles: 'true'
+SpacesInParentheses: 'true'
+SpaceAfterTemplateKeyword: 'false'
+
+...
