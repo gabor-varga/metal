@@ -37,6 +37,7 @@
 
 # Build directory
 build/*
+build.sh
 
 # Doc directory
 doc/*
