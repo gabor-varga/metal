@@ -38,8 +38,8 @@ namespace diff
          * @brief Returns the partial derivative vector of the expression, as stored inside the
          * derived class.
          *
-         * The order and dimension of the derivatives can be retrieved using the \ref parameterMap
-         * method.
+         * There is no information returned on the assembly or order of stored parameters. The order
+         * and dimension of the derivatives can be retrieved using the \ref parameterMap method.
          *
          * @return auto Partial derivative vector
          *
