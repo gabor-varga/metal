@@ -3,8 +3,8 @@
 
 
 #include "ScalarBase.h"
-#include <map>
 #include <Eigen/Core>
+#include <map>
 
 
 namespace diff
@@ -54,7 +54,7 @@ namespace diff
 
         /**
          * @brief Construct a new Scalar object and creates a parameter with the specified name.
-         * 
+         *
          * The partial derivative w.r.t. this parameter is initialized to unity.
          *
          * @param value Value of the scalar object
@@ -67,6 +67,13 @@ namespace diff
         {
         }
 
+        /**
+         * @brief Construct a new Scalar object from an existing expression by forcing the
+         * evaluation of the value and partial derivatives.
+         *
+         * @tparam Expr Type of expression to evaluate
+         * @param expr Expression to evaluate
+         */
         template< typename Expr >
         Scalar( const ScalarBase< Expr >& expr )
             : value_{ expr.value() }
@@ -75,39 +82,49 @@ namespace diff
         {
         }
 
-        template< typename Expr >
-        Scalar( ScalarBase< Expr >&& expr )
-            : value_{ std::move( expr.value() ) }
-            , partial_{ std::move( expr.partial() ) }
-            , parameterMap_{ std::move( expr.parameterMap() ) }
-        {
-        }
-
+        /**
+         *  @copydoc ScalarBase::value()
+         */
         double value() const
         {
             return value_;
         }
 
+        /**
+         *  @copydoc ScalarBase::partial()
+         */
         const Partial& partial() const
         {
             return partial_;
         }
 
+        /**
+         *  @copydoc ScalarBase::dim()
+         */
         const ParameterMap& parameterMap() const
         {
             return parameterMap_;
         }
 
+        /**
+         *  @copydoc ScalarBase::dim()
+         */
         size_t dim() const
         {
             return partial_.size();
         }
 
+        /**
+         *  @copydoc ScalarBase::size()
+         */
         size_t size() const
         {
             return parameterMap_.size();
         }
 
+        /**
+         *  @copydoc ScalarBase::parameters()
+         */
         ParameterPtrVector parameters() const
         {
             ParameterPtrVector out;
@@ -118,21 +135,30 @@ namespace diff
             return out;
         }
 
+        /**
+         *  @copydoc ScalarBase::begin()
+         */
         IteratorType begin() const
         {
             return IteratorType{ *this, parameterMap_.begin() };
         }
 
+        /**
+         *  @copydoc ScalarBase::end()
+         */
         IteratorType end() const
         {
             return IteratorType{ *this, parameterMap_.end() };
         }
 
     private:
+        /** Physical value of the scalar */
         double value_;
 
+        /** Storage for partial derivative vector */
         Partial partial_;
 
+        /** Associative map of parameters to their position and dimensino in the partial vector */
         ParameterMap parameterMap_;
     };
 
