@@ -38,17 +38,17 @@ namespace metal
 
     template< typename Expr >
     ScalarUnaryOp< Expr, UnaryMultiplyOp< Expr > > operator*(
-        const ScalarBase< Expr >& scalar, double multiplier )
+        const ScalarBase< Expr >& expr, double multiplier )
     {
         return ScalarUnaryOp< Expr, UnaryMultiplyOp< Expr > >(
-            static_cast< const Expr& >( scalar ), UnaryMultiplyOp< Expr >( multiplier ) );
+            static_cast< const Expr& >( expr ), UnaryMultiplyOp< Expr >( multiplier ) );
     }
 
     template< typename Expr >
     ScalarUnaryOp< Expr, UnaryMultiplyOp< Expr > > operator*(
-        double multiplier, const ScalarBase< Expr >& scalar )
+        double multiplier, const ScalarBase< Expr >& expr )
     {
-        return scalar * multiplier;
+        return expr * multiplier;
     }
 
 } // metal

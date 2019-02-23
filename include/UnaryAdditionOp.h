@@ -37,17 +37,17 @@ namespace metal
 
     template< typename Expr >
     ScalarUnaryOp< Expr, UnaryAdditionOp< Expr > > operator+(
-        const ScalarBase< Expr >& scalar, double additee )
+        const ScalarBase< Expr >& expr, double addend )
     {
         return ScalarUnaryOp< Expr, UnaryAdditionOp< Expr > >(
-            static_cast< const Expr& >( scalar ), UnaryAdditionOp< Expr >( additee ) );
+            static_cast< const Expr& >( expr ), UnaryAdditionOp< Expr >( addend ) );
     }
 
     template< typename Expr >
     ScalarUnaryOp< Expr, UnaryAdditionOp< Expr > > operator+(
-        double additee, const ScalarBase< Expr >& scalar )
+        double augend, const ScalarBase< Expr >& expr )
     {
-        return scalar + additee;
+        return expr + augend;
     }
 
 } // metal
