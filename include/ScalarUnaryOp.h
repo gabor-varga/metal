@@ -17,7 +17,7 @@ namespace diff
         using Partial = typename Op::Output;
         using PartialSegment = decltype( std::declval< Partial >().segment( int(), int() ) );
         using Record = std::pair< ParameterPtr, PartialSegment >;
-        using Iterator = Iterator< ScalarUnaryOp< Expr, Op > >;
+        using IteratorType = Iterator< ScalarUnaryOp< Expr, Op > >;
 
 
         ScalarUnaryOp( const Expr& expr, const Op& op )
@@ -57,14 +57,14 @@ namespace diff
             return expr_.parameters();
         }
 
-        Iterator begin() const
+        IteratorType begin() const
         {
-            return Iterator( *this, expr_.parameterMap().begin() );
+            return IteratorType( *this, expr_.parameterMap().begin() );
         }
 
-        Iterator end() const
+        IteratorType end() const
         {
-            return Iterator( *this, expr_.parameterMap().end() );
+            return IteratorType( *this, expr_.parameterMap().end() );
         }
 
     private:

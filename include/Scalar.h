@@ -4,11 +4,7 @@
 
 #include "ScalarBase.h"
 #include <map>
-
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Weverything"
 #include <Eigen/Core>
-#pragma clang diagnostic pop
 
 
 namespace diff
@@ -32,7 +28,7 @@ namespace diff
         using PartialSegment = Eigen::VectorBlock< const Partial, -1 >;
 
         /** Alias for the iterator */
-        using Iterator = Iterator< Scalar >;
+        using IteratorType = Iterator< Scalar >;
 
         /** Alias for type of representing the range of the derivative vector that holds information
          * w.r.t to a specific parameter */
@@ -122,14 +118,14 @@ namespace diff
             return out;
         }
 
-        Iterator begin() const
+        IteratorType begin() const
         {
-            return Iterator{ *this, parameterMap_.begin() };
+            return IteratorType{ *this, parameterMap_.begin() };
         }
 
-        Iterator end() const
+        IteratorType end() const
         {
-            return Iterator{ *this, parameterMap_.end() };
+            return IteratorType{ *this, parameterMap_.end() };
         }
 
     private:
