@@ -3,8 +3,22 @@
 
 
 #include "ScalarBase.h"
-#include <Eigen/Core>
 #include <map>
+
+
+#ifdef __clang__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Weverything"
+#include <Eigen/Core>
+#pragma clang diagnostic pop
+#elif defined __GNUC__
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Weffc++"
+#include <Eigen/Core>
+#pragma GCC diagnostic pop
+#else
+#include <Eigen/Core>
+#endif
 
 
 namespace metal
@@ -111,7 +125,7 @@ namespace metal
          */
         size_t dim() const
         {
-            return partial_.size();
+            return static_cast< size_t >( partial_.size() );
         }
 
         /**
