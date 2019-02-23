@@ -31,3 +31,4 @@
 *.out
 *.app
 metal.code-workspace
+.vscode
