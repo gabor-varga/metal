@@ -35,6 +35,13 @@ namespace metal
         using IteratorType = Iterator< ScalarUnaryOp< Expr, Op > >;
 
 
+        /**
+         * @brief Construct a new Scalar Unary Op object using an expression to apply an operation
+         * to.
+         *
+         * @param expr Expression as input for an operator to transform
+         * @param op Operation that defines the transformation
+         */
         ScalarUnaryOp( const Expr& expr, const Op& op )
             : expr_{ expr }
             , op_{ op }
