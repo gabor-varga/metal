@@ -1,22 +1,37 @@
-#ifndef DIFF_SCALARUNARYOP_H
-#define DIFF_SCALARUNARYOP_H
+#ifndef METAL_SCALARUNARYOP_H
+#define METAL_SCALARUNARYOP_H
 
 
 #include "ScalarBase.h"
 #include <math.h>
 
 
-namespace diff
+namespace metal
 {
 
+    /**
+     * @brief Proxy ET type to represent a unary operation in which exactly one other expression
+     * (scalar) take part in.
+     *
+     * The operation type is taken as a parameter when constructing the object. The partial
+     * derivative vector expression is cached at construction, as the dimension has to be the same
+     * as the incoming expression (since there is no source of additional parameters).
+     *
+     * @tparam Expr Type of expression the unary operation acts on
+     * @tparam Op Type of operation to be applied on the expression
+     */
     template< typename Expr, typename Op >
     class ScalarUnaryOp : public ScalarBase< ScalarUnaryOp< Expr, Op > >
     {
 
     public:
+        /** Alias for type of partial derivative vector. Using Eigen row vector */
         using Partial = typename Op::Output;
+
+        /** Alias for Eigen segment ET to represent part of the derivative vector */
         using PartialSegment = decltype( std::declval< Partial >().segment( int(), int() ) );
-        using Record = std::pair< ParameterPtr, PartialSegment >;
+
+        /** Alias for the iterator */
         using IteratorType = Iterator< ScalarUnaryOp< Expr, Op > >;
 
 
@@ -27,159 +42,82 @@ namespace diff
         {
         }
 
+        /**
+         *  @copydoc ScalarBase::value()
+         */
         double value() const
         {
             return op_.applyToValue( expr_.value() );
         }
 
+        /**
+         *  @copydoc ScalarBase::partial()
+         */
         Partial partial() const
         {
             return partial_;
         }
 
+        /**
+         *  @copydoc ScalarBase::parameterMap()
+         */
         auto parameterMap() const
         {
             return expr_.parameterMap();
         }
 
+        /**
+         *  @copydoc ScalarBase::dim()
+         */
         size_t dim() const
         {
             return expr_.dim();
         }
 
+        /**
+         *  @copydoc ScalarBase::size()
+         */
         size_t size() const
         {
             return expr_.size();
         }
 
+        /**
+         *  @copydoc ScalarBase::parameters()
+         */
         ParameterPtrVector parameters() const
         {
             return expr_.parameters();
         }
 
+        /**
+         *  @copydoc ScalarBase::begin()
+         */
         IteratorType begin() const
         {
             return IteratorType( *this, expr_.parameterMap().begin() );
         }
 
+        /**
+         *  @copydoc ScalarBase::end()
+         */
         IteratorType end() const
         {
             return IteratorType( *this, expr_.parameterMap().end() );
         }
 
     private:
+        /** Internal expression to apply the unary operator on */
         const Expr& expr_;
 
+        /** Operation to apply on the expression */
         Op op_;
 
+        /** Internal cached expression for the partial derivative vector after applying the
+         * operation */
         Partial partial_;
     };
-    
 
-    template< typename Expr >
-    class UnaryAdditionOp
-    {
+} // metal
 
-    public:
-        using Input = typename Expr::Partial;
-        using Output = Input;
-
-        explicit UnaryAdditionOp( double scalar )
-            : scalar_{ scalar }
-        {
-        }
-
-        double applyToValue( double value ) const
-        {
-            return value + scalar_;
-        }
-
-        Output applyToPartial( double, const Input& partial ) const
-        {
-            return partial;
-        }
-
-    private:
-        double scalar_;
-    };
-
-    template< typename Expr >
-    ScalarUnaryOp< Expr, UnaryAdditionOp< Expr > > operator+( const ScalarBase< Expr >& scalar, double additee )
-    {
-        return ScalarUnaryOp< Expr, UnaryAdditionOp< Expr > >( static_cast< const Expr& >( scalar ), UnaryAdditionOp< Expr >( additee ) );
-    }
-
-    template< typename Expr >
-    ScalarUnaryOp< Expr, UnaryAdditionOp< Expr > > operator+( double additee, const ScalarBase< Expr >& scalar )
-    {
-        return scalar + additee;
-    }
-
-
-    template< typename Expr >
-    class UnaryMultiplyOp
-    {
-
-    public:
-        using Input = typename Expr::Partial;
-        using Output = decltype( std::declval< Input >().operator*( double() ) );
-
-        explicit UnaryMultiplyOp( double scalar )
-            : scalar_{ scalar }
-        {
-        }
-
-        double applyToValue( double value ) const
-        {
-            return value * scalar_;
-        }
-
-        Output applyToPartial( double, const Input& partial ) const
-        {
-            return partial * scalar_;
-        }
-
-    private:
-        double scalar_;
-    };
-
-
-    template< typename Expr >
-    ScalarUnaryOp< Expr, UnaryMultiplyOp< Expr > > operator*( const ScalarBase< Expr >& scalar, double multiplier )
-    {
-        return ScalarUnaryOp< Expr, UnaryMultiplyOp< Expr > >( static_cast< const Expr& >( scalar ), UnaryMultiplyOp< Expr >( multiplier ) );
-    }
-
-    template< typename Expr >
-    ScalarUnaryOp< Expr, UnaryMultiplyOp< Expr > > operator*( double multiplier, const ScalarBase< Expr >& scalar )
-    {
-        return scalar * multiplier;
-    }
-
-
-    template< typename Expr >
-    struct SineOp
-    {
-        using Input = typename Expr::Partial;
-        using Output = decltype( std::declval< Input >().operator*( double() ) );
-
-        double applyToValue( double value ) const
-        {
-            return sin( value );
-        }
-
-        Output applyToPartial( double value, const Input& partial ) const
-        {
-            return partial * cos( value );
-        }
-    };
-
-    template< typename Expr >
-    ScalarUnaryOp< Expr, SineOp< Expr > > sin( const ScalarBase< Expr >& scalar )
-    {
-        return ScalarUnaryOp< Expr, SineOp< Expr > >( static_cast< const Expr& >( scalar ), SineOp< Expr >() );
-    }
-
-} // diff
-
-#endif // DIFF_SCALARUNARYOP_H
+#endif // METAL_SCALARUNARYOP_H

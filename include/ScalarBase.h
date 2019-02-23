@@ -1,5 +1,5 @@
-#ifndef DIFF_SCALARBASE_H
-#define DIFF_SCALARBASE_H
+#ifndef METAL_SCALARBASE_H
+#define METAL_SCALARBASE_H
 
 
 #include "Iterator.h"
@@ -7,7 +7,7 @@
 #include <iostream>
 
 
-namespace diff
+namespace metal
 {
 
     /**
@@ -185,6 +185,6 @@ namespace diff
         return os;
     }
 
-} // diff
+} // metal
 
-#endif // DIFF_SCALARBASE_H
+#endif // METAL_SCALARBASE_H

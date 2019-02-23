@@ -1,5 +1,5 @@
-#ifndef DIFF_SCALAR_H
-#define DIFF_SCALAR_H
+#ifndef METAL_SCALAR_H
+#define METAL_SCALAR_H
 
 
 #include "ScalarBase.h"
@@ -7,7 +7,7 @@
 #include <map>
 
 
-namespace diff
+namespace metal
 {
 
     /**
@@ -162,6 +162,6 @@ namespace diff
         ParameterMap parameterMap_;
     };
 
-} // diff
+} // metal
 
-#endif // DIFF_SCALAR_H
+#endif // METAL_SCALAR_H

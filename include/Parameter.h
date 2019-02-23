@@ -1,5 +1,5 @@
-#ifndef DIFF_PARAMETER_H
-#define DIFF_PARAMETER_H
+#ifndef METAL_PARAMETER_H
+#define METAL_PARAMETER_H
 
 
 #include <memory>
@@ -7,7 +7,7 @@
 #include <vector>
 
 
-namespace diff
+namespace metal
 {
 
     /**
@@ -64,6 +64,6 @@ namespace diff
     /** Alias for vector the parameter pointers */
     using ParameterPtrVector = std::vector< ParameterPtr >;
 
-} // namespace diff
+} // namespace metal
 
-#endif // DIFF_PARAMETER_H
+#endif // METAL_PARAMETER_H

@@ -1,11 +1,11 @@
-#ifndef DIFF_ITERATOR_H
-#define DIFF_ITERATOR_H
+#ifndef METAL_ITERATOR_H
+#define METAL_ITERATOR_H
 
 
 #include "Parameter.h"
 
 
-namespace diff
+namespace metal
 {
 
     /**
@@ -91,6 +91,6 @@ namespace diff
         Internal iter_;
     };
 
-} // diff
+} // metal
 
-#endif // DIFF_ITERATOR_H
+#endif // METAL_ITERATOR_H
