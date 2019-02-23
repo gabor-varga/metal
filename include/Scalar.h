@@ -46,7 +46,7 @@ namespace diff
          * @param value Value of the scalar object
          */
         explicit Scalar( double value = 0.0 )
-            : value_( value )
+            : value_{ value }
             , partial_()
             , parameterMap_()
         {
@@ -61,25 +61,25 @@ namespace diff
          * @param name Name of the internal parameter
          */
         Scalar( double value, const std::string& name )
-            : value_( value )
-            , partial_( Eigen::Matrix< double, 1, 1 >::Ones() )
-            , parameterMap_( { { std::make_shared< Parameter >( 1, name ), { 0, 1 } } } )
+            : value_{ value }
+            , partial_{ Eigen::Matrix< double, 1, 1 >::Ones() }
+            , parameterMap_{ { { std::make_shared< Parameter >( 1, name ), { 0, 1 } } } }
         {
         }
 
         template< typename Expr >
         Scalar( const ScalarBase< Expr >& expr )
-            : value_( expr.value() )
-            , partial_( expr.partial() )
-            , parameterMap_( expr.parameterMap() )
+            : value_{ expr.value() }
+            , partial_{ expr.partial() }
+            , parameterMap_{ expr.parameterMap() }
         {
         }
 
         template< typename Expr >
         Scalar( ScalarBase< Expr >&& expr )
-            : value_( std::move( expr.value() ) )
-            , partial_( std::move( expr.partial() ) )
-            , parameterMap_( std::move( expr.parameterMap() ) )
+            : value_{ std::move( expr.value() ) }
+            , partial_{ std::move( expr.partial() ) }
+            , parameterMap_{ std::move( expr.parameterMap() ) }
         {
         }
 

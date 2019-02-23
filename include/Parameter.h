@@ -25,8 +25,8 @@ namespace diff
          * @param name Name of the parameter
          */
         Parameter( int dim, const std::string& name )
-            : dim_( dim )
-            , name_( name )
+            : dim_{ dim }
+            , name_{ name }
         {
         }
 

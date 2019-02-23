@@ -21,9 +21,9 @@ namespace diff
 
 
         ScalarUnaryOp( const Expr& expr, const Op& op )
-            : expr_( expr )
-            , op_( op )
-            , partial_( op_.applyToPartial( expr_.value(), expr_.partial() ) )
+            : expr_{ expr }
+            , op_{ op }
+            , partial_{ op_.applyToPartial( expr_.value(), expr_.partial() ) }
         {
         }
 
@@ -85,7 +85,7 @@ namespace diff
         using Output = Input;
 
         explicit UnaryAdditionOp( double scalar )
-            : scalar_( scalar )
+            : scalar_{ scalar }
         {
         }
 
@@ -125,7 +125,7 @@ namespace diff
         using Output = decltype( std::declval< Input >().operator*( double() ) );
 
         explicit UnaryMultiplyOp( double scalar )
-            : scalar_( scalar )
+            : scalar_{ scalar }
         {
         }
 

@@ -32,8 +32,8 @@ namespace diff
          * @param iter Internal parameter iterator
          */
         Iterator( const T& object, Internal iter )
-            : object_( object )
-            , iter_( iter )
+            : object_{ object }
+            , iter_{ iter }
         {
         }
 
