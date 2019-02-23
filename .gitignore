@@ -30,5 +30,13 @@
 *.exe
 *.out
 *.app
-metal.code-workspace
+
+# Project files
+*.code-workspace
 .vscode
+
+# Build directory
+build/*
+
+# Doc directory
+doc/*
