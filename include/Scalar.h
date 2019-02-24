@@ -61,8 +61,8 @@ namespace metal
          */
         explicit Scalar( double value = 0.0 )
             : value_{ value }
-            , partial_()
-            , parameterMap_()
+            , partial_{}
+            , parameterMap_{}
         {
         }
 
