@@ -44,13 +44,6 @@ namespace metal
         /** Alias for the iterator */
         using IteratorType = Iterator< Scalar >;
 
-        /** Alias for type of representing the range of the derivative vector that holds information
-         * w.r.t to a specific parameter */
-        using Span = std::pair< int, int >;
-
-        /** Alias for type mapping the parameter space to derivative vector space */
-        using ParameterMap = std::map< ParameterPtr, Span >;
-
 
         /**
          * @brief Construct a new Scalar object without holding partial deriatives.
