@@ -79,8 +79,8 @@ namespace metal
          */
         Record operator*()
         {
-            return std::make_pair( iter_->first,
-                object_.partial().segment( iter_->second.first, iter_->second.second ) );
+            return std::make_pair(
+                iter_->first, object_.partial().segment( iter_->second, iter_->first->dim() ) );
         }
 
     private:

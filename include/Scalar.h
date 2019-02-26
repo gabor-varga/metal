@@ -3,7 +3,6 @@
 
 
 #include "ScalarBase.h"
-#include <map>
 
 
 #ifdef __clang__
@@ -70,7 +69,7 @@ namespace metal
         Scalar( double value, const std::string& name )
             : value_{ value }
             , partial_{ Eigen::Matrix< double, 1, 1 >::Ones() }
-            , parameterMap_{ { { std::make_shared< Parameter >( 1, name ), { 0, 1 } } } }
+            , parameterMap_{ { { std::make_shared< Parameter >( 1, name ), 0 } } }
         {
         }
 
