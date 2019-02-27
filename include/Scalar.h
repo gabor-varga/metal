@@ -5,21 +5,6 @@
 #include "ScalarBase.h"
 
 
-#ifdef __clang__
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Weverything"
-#include <Eigen/Core>
-#pragma clang diagnostic pop
-#elif defined __GNUC__
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Weffc++"
-#include <Eigen/Core>
-#pragma GCC diagnostic pop
-#else
-#include <Eigen/Core>
-#endif
-
-
 namespace metal
 {
 
@@ -155,6 +140,20 @@ namespace metal
         IteratorType end() const
         {
             return IteratorType{ *this, parameterMap_.end() };
+        }
+
+        /**
+         *  @copydoc ScalarBase::at()
+         */
+        auto at( const ParameterPtr& p ) const
+        {
+            if ( parameterMap_.count( p ) == 0 )
+            {
+                throw std::runtime_error(
+                    "Error! Parameter not present in partials: '" + p->name() + "'" );
+            }
+
+            return partial_.segment( parameterMap_.at( p ), p->dim() );
         }
 
     private:

@@ -6,6 +6,20 @@
 #include <exception>
 #include <iostream>
 
+#ifdef __clang__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Weverything"
+#include <Eigen/Core>
+#pragma clang diagnostic pop
+#elif defined __GNUC__
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Weffc++"
+#include <Eigen/Core>
+#pragma GCC diagnostic pop
+#else
+#include <Eigen/Core>
+#endif
+
 
 namespace metal
 {
@@ -152,14 +166,7 @@ namespace metal
          */
         auto at( const ParameterPtr& p ) const
         {
-            if ( parameterMap().count( p ) == 0 )
-            {
-                throw std::runtime_error(
-                    "Error! Parameter not present in partials: '" + p->name() + "'" );
-            }
-
-            const auto& record = parameterMap().at( p );
-            return partial().segment( record.first, record.second );
+            return static_cast< const Expr& >( *this ).at( p );
         }
     };
 

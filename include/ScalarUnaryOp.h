@@ -112,6 +112,20 @@ namespace metal
             return IteratorType( *this, expr_.parameterMap().end() );
         }
 
+        /**
+         *  @copydoc ScalarBase::at()
+         */
+        auto at( const ParameterPtr& p ) const
+        {
+            if ( expr_.parameterMap().count( p ) == 0 )
+            {
+                throw std::runtime_error(
+                    "Error! Parameter not present in partials: '" + p->name() + "'" );
+            }
+
+            return partial_.segment( expr_.parameterMap().at( p ), p->dim() );
+        }
+
     private:
         /** Internal expression to apply the unary operator on */
         const Expr& expr_;

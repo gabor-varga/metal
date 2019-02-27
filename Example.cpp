@@ -19,5 +19,17 @@ int main()
     metal::Scalar z = y;
     std::cout << z << std::endl;
 
+    metal::Scalar a{ 2.0, "a" };
+    std::cout << a << std::endl;
+    // std::cout << a.partial() << std::endl;
+    // std::cout << a.parameterMap().at( a.parameters().front() ) << std::endl;
+    // std::cout << a.parameters().front()->dim() << std::endl;
+    // std::cout << a.partial().segment( a.parameterMap().at( a.parameters().front() ), a.parameters().front()->dim() ) << std::endl;
+    // std::cout << a.at( a.parameters().front() ) << std::endl;
+    metal::Scalar b{ 3.0, "b" };
+    std::cout << b << std::endl;
+    metal::Scalar c = a + b;
+    std::cout << c << std::endl;
+
     return 0;
 }

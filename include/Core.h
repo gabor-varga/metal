@@ -8,6 +8,8 @@
 #include "UnaryAdditionOp.h"
 #include "UnaryMultiplyOp.h"
 #include "UnaryMathOp.h"
+#include "ScalarBinaryOp.h"
+#include "BinaryAdditionOp.h"
 
 
 #endif // METAL_CORE_H
