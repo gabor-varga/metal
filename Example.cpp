@@ -28,7 +28,7 @@ int main()
     // std::cout << a.at( a.parameters().front() ) << std::endl;
     metal::Scalar b{ 3.0, "b" };
     std::cout << b << std::endl;
-    metal::Scalar c = a + b;
+    metal::Scalar c = a * b;
     std::cout << c << std::endl;
 
     return 0;

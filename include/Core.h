@@ -10,6 +10,7 @@
 #include "UnaryMathOp.h"
 #include "ScalarBinaryOp.h"
 #include "BinaryAdditionOp.h"
+#include "BinaryMultiplyOp.h"
 
 
 #endif // METAL_CORE_H
