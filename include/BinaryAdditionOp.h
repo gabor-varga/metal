@@ -8,7 +8,6 @@
 namespace metal
 {
 
-
     class BinaryAdditionOp
     {
 
