@@ -87,7 +87,7 @@ namespace metal
                         // partial_.segment( id, dim )
                         //     += op_.rightPartial( left_.value(), right_.value() ) * right_.at( p );
                         partial_.segment( id, dim )
-                            += op_.leftPartial( left_.value(), right_.value() )
+                            += op_.rightPartial( left_.value(), right_.value() )
                             * right_.partial().segment( right_.parameterMap().at( p ), p->dim() );
                     }
 
