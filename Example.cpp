@@ -7,8 +7,10 @@ int main()
     metal::Scalar b{ 2.0, "b" };
     metal::Scalar c{ 3.0, "c" };
     metal::Scalar x = sin( a ) * 0.5 + b * c;
-
     std::cout << x << std::endl;
+
+    metal::Scalar y = a + b * c;
+    std::cout << y << std::endl;
 
     return 0;
 }
