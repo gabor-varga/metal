@@ -36,6 +36,8 @@ namespace metal
             : left_{ left }
             , right_{ right }
             , op_{ op }
+            , partial_{}
+            , parameterMap_{}
         {
             if ( left_.parameterMap() == right_.parameterMap() )
             {
