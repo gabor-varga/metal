@@ -12,12 +12,10 @@ Apart from using [Eigen]([**Eigen**](http://eigen.tuxfamily.org/)), it is also d
 ## Examples
 
 ```cpp
-using metal;
-
-Scalar a{ 1.0, "a" };
-Scalar b{ 2.0, "b" };
-Scalar c{ 3.0, "c" };
-Scalar x = sin(a) / 2 + b * c
+metal::Scalar a{ 1.0, "a" };
+metal::Scalar b{ 2.0, "b" };
+metal::Scalar c{ 3.0, "c" };
+metal::Scalar x = sin( a ) * 0.5 + b * c;
 ```
 
 ## Compilation
