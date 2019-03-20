@@ -24,16 +24,28 @@
 namespace metal
 {
 
+    /**
+     * @brief Type trait for the partial type of a specific ET class
+     * 
+     * @tparam Expr Type of the specific ET class
+     */
     template< typename Expr >
     struct Partial
     {
+        /** Alias for internal type */
         using Type = Eigen::Matrix< double, 1, -1 >;
     };
 
+    /**
+     * @brief Type trait for the partial segment type of a specific ET class
+     * 
+     * @tparam Expr Type of the specific ET class
+     */
     template< typename Expr >
     struct PartialSegment
     {
-        using Type = Eigen::VectorBlock< const Eigen::Matrix< double, 1, -1 >, -1 >;
+        /** Alias for internal type */
+        using Type = Eigen::VectorBlock< const typename Partial< Expr >::Type, -1 >;
     };
 
     /**
