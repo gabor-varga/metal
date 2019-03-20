@@ -24,6 +24,18 @@
 namespace metal
 {
 
+    template< typename Expr >
+    struct Partial
+    {
+        using Type = Eigen::Matrix< double, 1, -1 >;
+    };
+
+    template< typename Expr >
+    struct PartialSegment
+    {
+        using Type = Eigen::VectorBlock< const Eigen::Matrix< double, 1, -1 >, -1 >;
+    };
+
     /**
      * @brief Base class for the expression template (ET) design pattern of scalar differential
      * algebra system.
@@ -59,7 +71,7 @@ namespace metal
          *
          * @see dim
          */
-        auto partial() const
+        typename Partial< Expr >::Type partial() const
         {
             return static_cast< const Expr& >( *this ).partial();
         }
@@ -76,7 +88,7 @@ namespace metal
          * @see size
          * @see parameters
          */
-        auto parameterMap() const
+        const ParameterMap& parameterMap() const
         {
             return static_cast< const Expr& >( *this ).parameterMap();
         }
@@ -164,7 +176,7 @@ namespace metal
          * @param p Parameter to get partial derivative of
          * @return auto Partial derivative vector
          */
-        auto at( const ParameterPtr& p ) const
+        typename PartialSegment< Expr >::Type at( const ParameterPtr& p ) const
         {
             return static_cast< const Expr& >( *this ).at( p );
         }

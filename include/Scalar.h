@@ -145,7 +145,7 @@ namespace metal
         /**
          *  @copydoc ScalarBase::at()
          */
-        auto at( const ParameterPtr& p ) const
+        PartialSegment at( const ParameterPtr& p ) const
         {
             if ( parameterMap_.count( p ) == 0 )
             {

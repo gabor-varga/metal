@@ -67,7 +67,7 @@ namespace metal
                 params.erase( std::unique( params.begin(), params.end() ), params.end() );
 
                 const int totalDim = std::accumulate( params.begin(), params.end(), 0,
-                    []( int tmp, const auto& p ) { return tmp + p->dim(); } );
+                    []( int tmp, const ParameterPtr& p ) { return tmp + p->dim(); } );
                 partial_.setZero( totalDim );
 
                 int id = 0;
@@ -109,7 +109,7 @@ namespace metal
         /**
          *  @copydoc ScalarBase::partial()
          */
-        Partial partial() const
+        const Partial& partial() const
         {
             return partial_;
         }
@@ -117,7 +117,7 @@ namespace metal
         /**
          *  @copydoc ScalarBase::parameterMap()
          */
-        auto parameterMap() const
+        const ParameterMap& parameterMap() const
         {
             return parameterMap_;
         }
@@ -165,7 +165,7 @@ namespace metal
         /**
          *  @copydoc ScalarBase::at()
          */
-        auto at( const ParameterPtr& p ) const
+        PartialSegment at( const ParameterPtr& p ) const
         {
             if ( parameterMap_.count( p ) == 0 )
             {

@@ -67,7 +67,7 @@ namespace metal
         /**
          *  @copydoc ScalarBase::parameterMap()
          */
-        auto parameterMap() const
+        const ParameterMap& parameterMap() const
         {
             return expr_.parameterMap();
         }
@@ -115,7 +115,7 @@ namespace metal
         /**
          *  @copydoc ScalarBase::at()
          */
-        auto at( const ParameterPtr& p ) const
+        PartialSegment at( const ParameterPtr& p ) const
         {
             if ( expr_.parameterMap().count( p ) == 0 )
             {
