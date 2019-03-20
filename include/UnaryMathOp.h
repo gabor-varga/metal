@@ -22,7 +22,7 @@ namespace metal
         using Input = typename Expr::Partial;
 
         /** Alias for the output partial expression type */
-        using Output = decltype( std::declval< Input >().operator*( double() ) );
+        using Output = decltype( std::declval< Input >().operator*( double{} ) );
 
 
         /**

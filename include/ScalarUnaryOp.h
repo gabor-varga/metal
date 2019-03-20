@@ -28,7 +28,7 @@ namespace metal
         using Partial = typename Op::Output;
 
         /** Alias for Eigen segment ET to represent part of the derivative vector */
-        using PartialSegment = decltype( std::declval< Partial >().segment( int(), int() ) );
+        using PartialSegment = decltype( std::declval< Partial >().segment( int{}, int{} ) );
 
         /** Alias for the iterator */
         using IteratorType = Iterator< ScalarUnaryOp< Expr, Op > >;
