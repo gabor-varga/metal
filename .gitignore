@@ -38,6 +38,7 @@
 # Build directory
 build/*
 build.sh
+.ninja_*
 
 # Doc directory
 doc/*
