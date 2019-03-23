@@ -157,18 +157,36 @@ public:
         return partial_.segment( parameterMap_.at( p ), p->dim() );
     }
 
+    /**
+     * @brief In-place addition operator with a number.
+     * 
+     * @param other Floating point value to add
+     * @return Scalar& Reference to modified object
+     */
     Scalar& operator+= ( double other )
     {
         value_ += other;
         return *this;
     }
 
+    /**
+     * @brief In-place subtraction operator with a number.
+     * 
+     * @param other Floating point value to subtract
+     * @return Scalar& Reference to modified object
+     */
     Scalar& operator-= ( double other )
     {
         value_ -= other;
         return *this;
     }
 
+    /**
+     * @brief In-place multiplication operator with a number.
+     * 
+     * @param other Floating point value to multiply with
+     * @return Scalar& Reference to modified object
+     */
     Scalar& operator*= ( double other )
     {
         value_ *= other;
@@ -176,6 +194,12 @@ public:
         return *this;
     }
 
+    /**
+     * @brief In-place division operator with a number.
+     * 
+     * @param other Floating point value to divide with
+     * @return Scalar& Reference to modified object
+     */
     Scalar& operator/= ( double other )
     {
         value_ /= other;
