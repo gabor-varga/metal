@@ -24,13 +24,9 @@ metal::Scalar x = sin( a ) * 0.5 + b * c;
 
 ## Compilation
 
-This is a **header-only** library. To compile the tests and examples a c++11 compatible compiler is required.
-
-Below are the instructions to compile tests and documentation (only on UNIX).
+This is a **header-only** library. To compile the tests and examples a c++11 compatible compiler is required. A [**ninja**](https://github.com/ninja-build/ninja) build script is provided for user convenience. To build, simply use:
 
 ```bash
-mkdir build
-mkdir build/test
 ninja
 ```
 
