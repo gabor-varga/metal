@@ -20,7 +20,7 @@ metal::Scalar x = sin( a ) * 0.5 + b * c;
 
 ## Compilation
 
-This is a **header-only** library, no compilation or installation (apart from including it in the part of the compiler) is needed.
+This is a **header-only** library. To compile the tests and examples a c++11 compatible compiler is required.
 
 ## Dependencies
 
