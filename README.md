@@ -26,6 +26,14 @@ metal::Scalar x = sin( a ) * 0.5 + b * c;
 
 This is a **header-only** library. To compile the tests and examples a c++11 compatible compiler is required.
 
+Below are the instructions to compile tests and documentation (only on UNIX).
+
+```bash
+mkdir build
+mkdir build/test
+ninja
+```
+
 ## Dependencies
 
 This project relies heavily on [**Eigen**](http://eigen.tuxfamily.org/). Minimal version of 3.3.x is reccomended (probably works with any Eigen3 version).

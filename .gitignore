@@ -36,9 +36,10 @@
 .vscode
 
 # Build directory
-build/*
+build/example/*
+build/test/*
 build.sh
 .ninja_*
 
 # Doc directory
-doc/*
+doc/html
