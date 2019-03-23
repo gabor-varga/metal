@@ -12,7 +12,7 @@ namespace metal
 {
 
 /**
- * @brief Parameter for which partial derivative is computed.
+ * @brief Parameter pure abstract interface for which partial derivative is computed.
  *
  */
 class Parameter
@@ -20,43 +20,24 @@ class Parameter
 
 public:
     /**
-     * @brief Construct a new Parameter object.
-     *
-     * @param dim Dimension of the parameter
-     * @param name Name of the parameter
+     * @brief Destroy the Parameter object
+     * 
      */
-    Parameter( int dim, const std::string& name )
-        : dim_{ dim }
-        , name_{ name }
-    {
-    }
+    virtual ~Parameter() = default;
 
     /**
      * @brief Returns the dimension of the parameter.
      *
      * @return int Dimension of the parameter
      */
-    int dim() const
-    {
-        return dim_;
-    }
+    virtual int dim() const = 0;
 
     /**
      * @brief Returns the name of the parameter.
      *
      * @return const std::string& Name of the parameter
      */
-    const std::string& name() const
-    {
-        return name_;
-    }
-
-private:
-    /** Dimension of the parameter */
-    int dim_;
-
-    /** Name of the parameter */
-    std::string name_;
+    virtual const std::string& name() const = 0;
 };
 
 /** Alias for shared pointer of a parmeter */

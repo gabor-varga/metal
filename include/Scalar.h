@@ -3,6 +3,7 @@
 
 
 #include "ScalarBase.h"
+#include "NamedParameter.h"
 
 
 namespace metal
@@ -51,10 +52,11 @@ public:
      * @param value Value of the scalar object
      * @param name Name of the internal parameter
      */
+    template< typename T = NamedParameter >
     Scalar( double value, const std::string& name )
         : value_{ value }
         , partial_{ Eigen::Matrix< double, 1, 1 >::Ones() }
-        , parameterMap_{ { { std::make_shared< Parameter >( 1, name ), 0 } } }
+        , parameterMap_{ { { std::make_shared< T >( 1, name ), 0 } } }
     {
     }
 
