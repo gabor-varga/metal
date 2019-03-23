@@ -1,13 +1,12 @@
 #include "../include/ScalarUnaryOp.h"
 #include "../include/UnaryMathOp.h"
-#include "../include/Scalar.h"
-#include "catch.hpp"
+#include "TestSuite.h"
 
 
 using namespace metal;
 
 
-TEST_CASE( "Scalars can be modified by adding numbers", "[scalar_modify_add]" )
+TEST_CASE( "Unary operations can be applied on scalars", "[scalar_unary_sine]" )
 {
     SECTION( "Sine without partials" )
     {
@@ -15,6 +14,7 @@ TEST_CASE( "Scalars can be modified by adding numbers", "[scalar_modify_add]" )
         const auto y = sin( x );
 
         REQUIRE( y.value() == sin( 2.0 ) );
+        REQUIRE_PARTIALS_EMPTY( y );
     }
 
     SECTION( "Sine with partials" )
@@ -23,5 +23,6 @@ TEST_CASE( "Scalars can be modified by adding numbers", "[scalar_modify_add]" )
         const auto y = sin( x );
 
         REQUIRE( y.value() == sin( 2.0 ) );
+        REQUIRE_PARTIALS_EQUAL( y, cos( 2.0 ) );
     }
 }
