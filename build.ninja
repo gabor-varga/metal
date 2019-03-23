@@ -6,7 +6,7 @@ flags = -g -std=c++11 -Weverything -Wno-c++98-compat -Wno-padded -fcomment-block
 
 
 rule example
-    command = clang++ -g $flags $in -o $build_directory/$out
+    command = clang++ -g $flags $in -o $build_directory/example/$out
 
 rule testConfig
     command = clang++ -g -std=c++11 -fPIC -shared test/catch.cpp -o $build_directory/test/libcatch.so
