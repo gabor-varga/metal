@@ -157,6 +157,32 @@ public:
         return partial_.segment( parameterMap_.at( p ), p->dim() );
     }
 
+    Scalar& operator+= ( double other )
+    {
+        value_ += other;
+        return *this;
+    }
+
+    Scalar& operator-= ( double other )
+    {
+        value_ -= other;
+        return *this;
+    }
+
+    Scalar& operator*= ( double other )
+    {
+        value_ *= other;
+        partial_ *= other;
+        return *this;
+    }
+
+    Scalar& operator/= ( double other )
+    {
+        value_ /= other;
+        partial_ /= other;
+        return *this;
+    }
+
 private:
     /** Physical value of the scalar */
     double value_;
