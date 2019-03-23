@@ -10,7 +10,6 @@ AlwaysBreakTemplateDeclarations: 'true'
 BreakBeforeBraces: Allman
 ColumnLimit: '100'
 MaxEmptyLinesToKeep: '2'
-NamespaceIndentation: All
 SpaceBeforeParens: ControlStatements
 SpacesInAngles: 'true'
 SpacesInParentheses: 'true'

@@ -8,35 +8,34 @@
 namespace metal
 {
 
-    class BinaryAdditionOp
+class BinaryAdditionOp
+{
+
+public:
+    double applyToValue( double left, double right ) const
     {
-
-    public:
-        
-        double applyToValue( double left, double right ) const
-        {
-            return left + right;
-        }
-
-        double leftPartial( double, double ) const
-        {
-            return 1.0;
-        }
-       
-        double rightPartial( double, double ) const
-        {
-            return 1.0;
-        }
-    };
-
-
-    template< typename Left, typename Right >
-    ScalarBinaryOp< Left, Right, BinaryAdditionOp > operator+(
-        const ScalarBase< Left >& left, const ScalarBase< Right >& right )
-    {
-        return ScalarBinaryOp< Left, Right, BinaryAdditionOp >( static_cast< const Left& >( left ),
-            static_cast< const Right& >( right ), BinaryAdditionOp{} );
+        return left + right;
     }
+
+    double leftPartial( double, double ) const
+    {
+        return 1.0;
+    }
+
+    double rightPartial( double, double ) const
+    {
+        return 1.0;
+    }
+};
+
+
+template< typename Left, typename Right >
+ScalarBinaryOp< Left, Right, BinaryAdditionOp > operator+(
+    const ScalarBase< Left >& left, const ScalarBase< Right >& right )
+{
+    return ScalarBinaryOp< Left, Right, BinaryAdditionOp >( static_cast< const Left& >( left ),
+        static_cast< const Right& >( right ), BinaryAdditionOp{} );
+}
 
 } // metal
 
