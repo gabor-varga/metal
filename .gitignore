@@ -38,8 +38,11 @@
 # Build directory
 build/example/*
 build/test/*
-build.sh
-.ninja_*
+!build/*/.gitkeep
 
-# Doc directory
+# Ninja build logs
+.ninja_*
+build.sh
+
+# Doc html output directory
 doc/html
