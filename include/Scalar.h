@@ -149,10 +149,9 @@ public:
     {
         if ( parameterMap_.count( p ) == 0 )
         {
-            throw std::runtime_error(
-                "Error! Parameter not present in partials: '" + p->name() + "'" );
+            throw std::runtime_error( "Error! Parameter not present in partials: '"
+                + ( p ? p->name() : "NULLPTR" ) + "'" );
         }
-
         return partial_.segment( parameterMap_.at( p ), p->dim() );
     }
 
