@@ -7,7 +7,7 @@ This header-only C++ library is developed to simplify partial derivative computa
 
 It realies heavily on the expression template design pattern (**_ET_**) to optimise away temporaries by interfacing with a linear algebra library ([**Eigen**](http://eigen.tuxfamily.org/)) that supports this approach. During local **_ET_** evaluation backward **_AD_**, while globally forward **_AD_** is used. This enables complex computations to be performed (e.g. numerical integration of differential equations) without running into issues with stack size (of the backward algorithm).
 
-Apart from using [Eigen]([**Eigen**](http://eigen.tuxfamily.org/)), it is also designed to be used together with it allow vectorizing computations.
+Apart from using [Eigen](http://eigen.tuxfamily.org/), it is also designed to be used together with it allow vectorizing computations.
 
 ## Examples
 
@@ -17,6 +17,10 @@ metal::Scalar b{ 2.0, "b" };
 metal::Scalar c{ 3.0, "c" };
 metal::Scalar x = sin( a ) * 0.5 + b * c;
 ```
+
+## Testing
+
+[**Catch2**](https://github.com/catchorg/Catch2) is integrated for testing. A single-header version is included in the repository test folder.
 
 ## Compilation
 
