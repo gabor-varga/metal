@@ -9,7 +9,7 @@ TEST_CASE( "Scalars can be created", "[scalar_construct]" )
 {
     SECTION( "Simple construction from value" )
     {
-        Scalar x{ 2.5 };
+        const Scalar x{ 2.5 };
 
         REQUIRE( x.value() == 2.5 );
         REQUIRE( x.partial() == Scalar::Partial{} );
@@ -22,7 +22,7 @@ TEST_CASE( "Scalars can be created", "[scalar_construct]" )
 
     SECTION( "Construction from value by giving a name" )
     {
-        Scalar x{ 3.5, "x" };
+        const Scalar x{ 3.5, "x" };
         const auto p = x.parameters().front();
 
         REQUIRE( x.value() == 3.5 );
