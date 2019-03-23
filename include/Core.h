@@ -5,6 +5,7 @@
 #include "ScalarBase.h"
 #include "Scalar.h"
 #include "ScalarUnaryOp.h"
+#include "UnaryNegateOp.h"
 #include "UnaryAdditionOp.h"
 #include "UnaryMultiplyOp.h"
 #include "UnaryMathOp.h"
