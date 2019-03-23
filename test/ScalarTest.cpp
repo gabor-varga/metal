@@ -5,6 +5,11 @@
 using namespace metal;
 
 
+// Silence clang warning (-Wmissing-prototypes)
+void REQUIRE_PARTIALS_EMPTY( const Scalar& x );
+void REQUIRE_PARTIALS_UNITY( const Scalar& x );
+
+
 void REQUIRE_PARTIALS_EMPTY( const Scalar& x )
 {
     REQUIRE( x.partial() == Scalar::Partial{} );

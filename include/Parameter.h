@@ -23,7 +23,7 @@ public:
      * @brief Destroy the Parameter object
      * 
      */
-    virtual ~Parameter() = default;
+    virtual ~Parameter();
 
     /**
      * @brief Returns the dimension of the parameter.
@@ -39,6 +39,10 @@ public:
      */
     virtual const std::string& name() const = 0;
 };
+
+
+// Defined outside to avoid weak-vtables clang warning
+Parameter::~Parameter() {}
 
 /** Alias for shared pointer of a parmeter */
 using ParameterPtr = std::shared_ptr< Parameter >;
