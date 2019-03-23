@@ -4,7 +4,6 @@
 using namespace metal;
 
 
-
 TEST_CASE( "Scalars can be created", "[scalar_construct]" )
 {
     SECTION( "Simple construction from value" )
