@@ -22,7 +22,7 @@ rule doc
 
 
 build example: example Example.cpp
-#build test_config: testConfig
+build test_config: testConfig
 build test_scalar: test test/ScalarTest.cpp
 build test_unary_op: test test/ScalarUnaryOpTest.cpp
-#build Doc: doc
+build Doc: doc
