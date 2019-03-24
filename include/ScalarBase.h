@@ -80,44 +80,9 @@ public:
     }
 
     /**
-     * @brief Returns the partial derivative vector of the expression, as stored inside the
-     * derived class.
-     *
-     * There is no information returned on the assembly or order of stored parameters. The order
-     * and dimension of the derivatives can be retrieved using the \ref parameterMap method.
-     *
-     * @return auto Partial derivative vector
-     *
-     * @see dim
-     */
-    typename Partial< Expr >::Type partial() const
-    {
-        return static_cast< const Expr& >( *this ).partial();
-    }
-
-    /**
-     * @brief Returns the associative mapping between parameters and the position/dimension they
-     * are stored in the derivative vector.
-     *
-     * The values of the map store the starting id and the span of the parameter in the
-     * derivative vector.
-     *
-     * @return auto Parameter map to decode partial vector
-     *
-     * @see size
-     * @see parameters
-     */
-    const ParameterMap& parameterMap() const
-    {
-        return static_cast< const Expr& >( *this ).parameterMap();
-    }
-
-    /**
      * @brief Returns the dimension of the partial derivative vector returned by \ref partial.
      *
      * @return size_t Size of the derivative vector
-     *
-     * @see partial
      */
     size_t dim() const
     {
@@ -130,7 +95,6 @@ public:
      *
      * @return size_t Number of parameters associated with the derivatives
      *
-     * @see parameterMap
      * @see parameters
      */
     size_t size() const
@@ -144,7 +108,6 @@ public:
      *
      * @return ParameterPtrVector Vector of parameters in partial computation
      *
-     * @see parameterMap
      * @see size
      */
     ParameterPtrVector parameters() const
@@ -192,6 +155,8 @@ public:
      * @param p Parameter to check existance of
      * @return true Expression contains partial w.r.t. the parameter
      * @return false Expression does not contains partial w.r.t. the parameter
+     * 
+     * @see at
      */
     bool contains( const ParameterPtr& p ) const
     {
@@ -206,6 +171,8 @@ public:
      *
      * @param p Parameter to get partial derivative of
      * @return auto Partial derivative vector
+     * 
+     * @see contains
      */
     typename PartialSegment< Expr >::Type at( const ParameterPtr& p ) const
     {

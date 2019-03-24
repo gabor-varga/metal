@@ -8,31 +8,40 @@
 namespace metal
 {
 
+template< typename Expr >
+struct ImplementsParameterVector
+{
+    static const bool Value = true;
+    using Type = ParameterPtrVector::const_iterator;
+};
+
+
 /**
- * @brief Iterator to represent a certain partial derivative in an object.
+ * @brief Iterator to represent a certain partial derivative in an expression.
  *
- * @tparam T Type of the object the iterator refers to
+ * @tparam Expr Type of the expression the iterator refers to
  */
-template< typename T >
+template< typename Expr >
 class Iterator
 {
 
 public:
     /** Alias for record returned by dereferencing the iterator */
-    using Record = std::pair< ParameterPtr, typename T::PartialSegment >;
+    using Record = std::pair< ParameterPtr, typename Expr::PartialSegment >;
 
-    /** Internal pointer type of the parameter map inside the referred object */
-    using Internal = decltype( std::declval< T >().parameterMap().begin() );
+    /** Internal pointer type of the record inside the referred expression */
+    using Internal = typename ImplementsParameterVector< Expr >::Type;
+
 
     /**
      * @brief Construct a new Iterator object taking a reference
      * to the target object and the internal iterator.
      *
-     * @param object Object to refer to
+     * @param expr Object to refer to
      * @param iter Internal parameter iterator
      */
-    Iterator( const T& object, Internal iter )
-        : object_{ object }
+    Iterator( const Expr& expr, Internal iter )
+        : expr_{ expr }
         , iter_{ iter }
     {
     }
@@ -46,7 +55,7 @@ public:
      */
     bool operator==( const Iterator& other )
     {
-        return ( &object_ == &other.object_ && iter_ == other.iter_ );
+        return ( &expr_ == &other.expr_ && iter_ == other.iter_ );
     }
 
     /**
@@ -77,15 +86,26 @@ public:
      *
      * @return Record Composite of the parameter and partial derivative value
      */
-    Record operator*()
+    template< bool T = ImplementsParameterVector< Expr >::Value >
+    typename std::enable_if< T, Record >::type operator*()
     {
-        return std::make_pair(
-            iter_->first, object_.partial().segment( iter_->second, iter_->first->dim() ) );
+        return std::make_pair( iter_, expr_.at( *iter_ ) );
+    }
+
+    /**
+     * @brief Dereferencing operator that returns the refered partial item.
+     *
+     * @return Record Composite of the parameter and partial derivative value
+     */
+    template< bool T = ImplementsParameterVector< Expr >::Value >
+    typename std::enable_if< !T, Record >::type operator*()
+    {
+        return std::make_pair( iter_->first, expr_.at( iter_->first ) );
     }
 
 private:
     /** Referred object */
-    const T& object_;
+    const Expr& expr_;
 
     /** Internal wrapped iterator */
     Internal iter_;

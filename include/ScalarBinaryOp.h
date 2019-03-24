@@ -55,7 +55,7 @@ public:
         , parameters_{ left_.parameters() }
     {
         const bool condition1 = parameters_.size() == 0;
-        const bool condition2 = right_.size() && left_.parameterMap() != right_.parameterMap();
+        const bool condition2 = right_.size() && left_.parameters() != right_.parameters();
 
         if ( condition1 || condition2 )
         {
@@ -76,22 +76,6 @@ public:
     double value() const
     {
         return value_;
-    }
-
-    /**
-     *  @copydoc ScalarBase::partial()
-     */
-    Partial partial() const
-    {
-        return Partial{};
-    }
-
-    /**
-     *  @copydoc ScalarBase::parameterMap()
-     */
-    ParameterMap parameterMap() const
-    {
-        return ParameterMap{};
     }
 
     /**

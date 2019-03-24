@@ -17,13 +17,6 @@ namespace metal
 template< typename Expr >
 struct NegateOp
 {
-    /** Alias for partial type of the input expression */
-    using Input = typename Partial< Expr >::Type;
-
-    /** Alias for the output partial expression type */
-    using Output = decltype( -std::declval< Input >() );
-
-
     /**
      * @brief Applies the transformation on the value of an expression.
      *
@@ -36,14 +29,13 @@ struct NegateOp
     }
 
     /**
-     * @brief Applies the transformation on the partial of an expression.
-     *
-     * @param partial Partial of the expression
-     * @return Output Transformed partial
+     * @brief Computes the partial derivative of the unary operation.
+     * 
+     * @return double Partial
      */
-    Output applyToPartial( double, const Input& partial ) const
+    double partial( double ) const
     {
-        return -partial;
+        return -1.0;
     }
 };
 

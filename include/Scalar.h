@@ -10,6 +10,15 @@
 namespace metal
 {
 
+class Scalar;
+
+template<>
+struct ImplementsParameterVector< Scalar >
+{
+    static const bool Value = false;
+    using Type = ParameterMap::const_iterator;
+};
+
 /**
  * @brief Concrete final type of the ET design architecture involving derivatives computation.
  *
@@ -95,22 +104,6 @@ public:
     double value() const
     {
         return value_;
-    }
-
-    /**
-     *  @copydoc ScalarBase::partial()
-     */
-    const Partial& partial() const
-    {
-        return partial_;
-    }
-
-    /**
-     *  @copydoc ScalarBase::dim()
-     */
-    const ParameterMap& parameterMap() const
-    {
-        return parameterMap_;
     }
 
     /**

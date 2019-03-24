@@ -19,13 +19,6 @@ class UnaryAdditionOp
 {
 
 public:
-    /** Alias for partial type of the input expression */
-    using Input = typename Partial< Expr >::Type;
-
-    /** Alias for the output partial expression type */
-    using Output = Input;
-
-
     /**
      * @brief Construct a new Unary Addition Op object with a scalar to add to an expression.
      *
@@ -48,14 +41,13 @@ public:
     }
 
     /**
-     * @brief Applies the transformation on the partial of an expression.
-     *
-     * @param partial Partial of the expression
-     * @return Output Transformed partial
+     * @brief Computes the partial derivative of the unary operation.
+     * 
+     * @return double Partial
      */
-    Output applyToPartial( double, const Input& partial ) const
+    double partial( double ) const
     {
-        return partial;
+        return 1.0;
     }
 
 private:

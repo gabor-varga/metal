@@ -18,13 +18,6 @@ namespace metal
 template< typename Expr >
 struct SineOp
 {
-    /** Alias for partial type of the input expression */
-    using Input = typename Partial< Expr >::Type;
-
-    /** Alias for the output partial expression type */
-    using Output = decltype( std::declval< Input >() * double{} );
-
-
     /**
      * @brief Applies the transformation on the value of an expression.
      *
@@ -37,15 +30,13 @@ struct SineOp
     }
 
     /**
-     * @brief Applies the transformation on the partial of an expression.
-     *
-     * @param value Value of the expression
-     * @param partial Partial of the expression
-     * @return Output Transformed partial
+     * @brief Computes the partial derivative of the unary operation.
+     * 
+     * @return double Partial
      */
-    Output applyToPartial( double value, const Input& partial ) const
+    double partial( double value ) const
     {
-        return partial * cos( value );
+        return cos( value );
     }
 };
 

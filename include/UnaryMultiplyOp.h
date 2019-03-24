@@ -19,13 +19,6 @@ class UnaryMultiplyOp
 {
 
 public:
-    /** Alias for partial type of the input expression */
-    using Input = typename Partial< Expr >::Type;
-
-    /** Alias for the output partial expression type */
-    using Output = decltype( std::declval< Input >() * double{} );
-
-
     /**
      * @brief Construct a new Unary Multiply Op object with a scalar to multiply an expression
      * with.
@@ -49,14 +42,13 @@ public:
     }
 
     /**
-     * @brief Applies the transformation on the partial of an expression.
-     *
-     * @param partial Partial of the expression
-     * @return Output Transformed partial
+     * @brief Computes the partial derivative of the unary operation.
+     * 
+     * @return double Partial
      */
-    Output applyToPartial( double, const Input& partial ) const
+    double partial( double ) const
     {
-        return partial * scalar_;
+        return scalar_;
     }
 
 private:

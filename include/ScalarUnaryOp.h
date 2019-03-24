@@ -9,23 +9,11 @@ namespace metal
 {
 
 template< typename Expr, typename Op >
-class ScalarUnaryOp;
-
-
-template< typename Expr, typename Op >
-struct Partial< ScalarUnaryOp< Expr, Op > >
+struct PartialSegment< ScalarUnaryOp< Expr, Op > >
 {
     /** Alias for internal type */
-    using Type = typename Op::Output;
+    using Type = decltype( std::declval< typename PartialSegment< Expr >::Type >() * double{} );
 };
-
-
-// template< typename Expr, typename Op >
-// struct PartialSegment< ScalarUnaryOp< Expr, Op > >
-// {
-//     /** Alias for internal type */
-//     using Type = decltype( std::declval< Partial >().segment( int{}, int{} ) );
-// };
 
 
 /**
@@ -45,7 +33,7 @@ class ScalarUnaryOp : public ScalarBase< ScalarUnaryOp< Expr, Op > >
 
 public:
     /** Alias for type of partial derivative vector. Using Eigen row vector */
-    using Partial = typename Partial< ScalarUnaryOp< Expr, Op > >::Type;
+    // using Partial = typename Partial< ScalarUnaryOp< Expr, Op > >::Type;
 
     /** Alias for Eigen segment ET to represent part of the derivative vector */
     using PartialSegment = typename PartialSegment< ScalarUnaryOp< Expr, Op > >::Type;
@@ -64,7 +52,9 @@ public:
     ScalarUnaryOp( const Expr& expr, const Op& op )
         : expr_{ expr }
         , op_{ op }
-        , partial_{ op_.applyToPartial( expr_.value(), expr_.partial() ) }
+        , cache_{ expr_.value() }
+        , value_{ op_.applyToValue( cache_ ) }
+        , partial_{ op_.partial( cache_ ) }
     {
     }
 
@@ -73,23 +63,7 @@ public:
      */
     double value() const
     {
-        return op_.applyToValue( expr_.value() );
-    }
-
-    /**
-     *  @copydoc ScalarBase::partial()
-     */
-    Partial partial() const
-    {
-        return partial_;
-    }
-
-    /**
-     *  @copydoc ScalarBase::parameterMap()
-     */
-    ParameterMap parameterMap() const
-    {
-        return expr_.parameterMap();
+        return value_;
     }
 
     /**
@@ -150,7 +124,8 @@ public:
             throw std::runtime_error( "Error! Parameter not present in partials: '"
                 + ( p ? p->name() : "NULLPTR" ) + "'" );
         }
-        return partial_.segment( expr_.parameterMap().at( p ), p->dim() );
+        // return partial_.segment( expr_.parameterMap().at( p ), p->dim() );
+        return expr_.at( p ) * partial_;
     }
 
     /**
@@ -158,7 +133,7 @@ public:
      */
     void accum( EigenRowVectorSegment& partial, double scalar, const ParameterPtr& p ) const
     {
-        partial += scalar * at( p );
+        expr_.accum( partial, scalar * partial_, p );
     }
 
 private:
@@ -168,9 +143,14 @@ private:
     /** Operation to apply on the expression */
     Op op_;
 
-    /** Internal cached expression for the partial derivative vector after applying the
-     * operation */
-    Partial partial_;
+    /** Cached sub-expression value */
+    double cache_;
+
+    /** Computed expression value */
+    double value_;
+
+    /** Partial w.r.t. the sub-expression */
+    double partial_;
 };
 
 } // metal
