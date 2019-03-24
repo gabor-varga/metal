@@ -28,10 +28,10 @@ class ScalarBinaryOp : public ScalarBase< ScalarBinaryOp< Left, Right, Op > >
 
 public:
     /** Alias for type of partial derivative vector. Using Eigen row vector */
-    using PartialType = Eigen::Matrix< double, 1, -1 >;
+    using Partial = Eigen::Matrix< double, 1, -1 >;
 
     /** Alias for Eigen segment ET to represent part of the derivative vector */
-    using PartialSegmentType = typename PartialSegment< ScalarBinaryOp< Left, Right, Op > >::Type;
+    using PartialSegment = typename PartialSegment< ScalarBinaryOp< Left, Right, Op > >::Type;
 
     /** Alias for the iterator */
     using IteratorType = Iterator< ScalarBinaryOp< Left, Right, Op > >;
@@ -81,9 +81,9 @@ public:
     /**
      *  @copydoc ScalarBase::partial()
      */
-    PartialType partial() const
+    Partial partial() const
     {
-        return PartialType{};
+        return Partial{};
     }
 
     /**
@@ -146,7 +146,7 @@ public:
     /**
      *  @copydoc ScalarBase::at()
      */
-    PartialSegmentType at( const ParameterPtr& p ) const
+    PartialSegment at( const ParameterPtr& p ) const
     {
         return op_.leftPartial( lvalue_, rvalue_ ) * left_.at( p )
             + op_.rightPartial( lvalue_, rvalue_ ) * right_.at( p );

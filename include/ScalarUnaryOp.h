@@ -45,10 +45,10 @@ class ScalarUnaryOp : public ScalarBase< ScalarUnaryOp< Expr, Op > >
 
 public:
     /** Alias for type of partial derivative vector. Using Eigen row vector */
-    using PartialType = typename Partial< ScalarUnaryOp< Expr, Op > >::Type;
+    using Partial = typename Partial< ScalarUnaryOp< Expr, Op > >::Type;
 
     /** Alias for Eigen segment ET to represent part of the derivative vector */
-    using PartialSegmentType = typename PartialSegment< ScalarUnaryOp< Expr, Op > >::Type;
+    using PartialSegment = typename PartialSegment< ScalarUnaryOp< Expr, Op > >::Type;
 
     /** Alias for the iterator */
     using IteratorType = Iterator< ScalarUnaryOp< Expr, Op > >;
@@ -79,7 +79,7 @@ public:
     /**
      *  @copydoc ScalarBase::partial()
      */
-    PartialType partial() const
+    Partial partial() const
     {
         return partial_;
     }
@@ -143,7 +143,7 @@ public:
     /**
      *  @copydoc ScalarBase::at()
      */
-    PartialSegmentType at( const ParameterPtr& p ) const
+    PartialSegment at( const ParameterPtr& p ) const
     {
         if ( !count( p ) )
         {
@@ -170,7 +170,7 @@ private:
 
     /** Internal cached expression for the partial derivative vector after applying the
      * operation */
-    PartialType partial_;
+    Partial partial_;
 };
 
 } // metal

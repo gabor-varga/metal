@@ -30,8 +30,6 @@ using EigenRowVector = Eigen::Matrix< double, 1, -1 >;
 /* Alias for eigen row vector segment */
 using EigenRowVectorSegment = Eigen::VectorBlock< EigenRowVector, -1 >;
 
-/* Alias for eigen row vector const segment */
-using EigenRowVectorConstSegment = Eigen::VectorBlock< const EigenRowVector, -1 >;
 
 /**
  * @brief Type trait for the partial type of a specific ET class
