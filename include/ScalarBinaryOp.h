@@ -33,9 +33,6 @@ public:
     /** Alias for Eigen segment ET to represent part of the derivative vector */
     using PartialSegment = typename PartialSegment< ScalarBinaryOp< Left, Right, Op > >::Type;
 
-    /** Alias for the iterator */
-    using IteratorType = Iterator< ScalarBinaryOp< Left, Right, Op > >;
-
 
     enum class ForwardCall
     {
@@ -101,22 +98,6 @@ public:
     const ParameterPtrVector& parameters() const
     {
         return parameters_;
-    }
-
-    /**
-     *  @copydoc ScalarBase::begin()
-     */
-    IteratorType begin() const
-    {
-        return IteratorType{ *this, ParameterMap{}.begin() };
-    }
-
-    /**
-     *  @copydoc ScalarBase::end()
-     */
-    IteratorType end() const
-    {
-        return IteratorType{ *this, ParameterMap{}.end() };
     }
 
     /**

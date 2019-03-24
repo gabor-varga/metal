@@ -42,9 +42,6 @@ public:
     /** Alias for Eigen segment ET to represent part of the derivative vector */
     using PartialSegment = typename PartialSegment< ScalarUnaryOp< Expr, Op > >::Type;
 
-    /** Alias for the iterator */
-    using IteratorType = Iterator< ScalarUnaryOp< Expr, Op > >;
-
 
     /**
      * @brief Construct a new Scalar Unary Op object using an expression to apply an operation
@@ -92,22 +89,6 @@ public:
     ParameterPtrVector parameters() const
     {
         return expr_.parameters();
-    }
-
-    /**
-     *  @copydoc ScalarBase::begin()
-     */
-    IteratorType begin() const
-    {
-        return IteratorType{ *this, expr_.parameters().begin() };
-    }
-
-    /**
-     *  @copydoc ScalarBase::end()
-     */
-    IteratorType end() const
-    {
-        return IteratorType{ *this, expr_.parameters().end() };
     }
 
     /**

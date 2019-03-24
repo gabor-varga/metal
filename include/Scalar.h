@@ -10,16 +10,6 @@
 namespace metal
 {
 
-class Scalar;
-
-
-template<>
-struct ImplementsParameterVector< Scalar >
-{
-    static const bool Value = false;
-    using Type = ParameterMap::const_iterator;
-};
-
 /**
  * @brief Concrete final type of the ET design architecture involving derivatives computation.
  *
@@ -36,9 +26,6 @@ public:
 
     /** Alias for Eigen segment ET to represent part of the derivative vector */
     using PartialSegment = typename PartialSegment< Scalar >::Type;
-
-    /** Alias for the iterator */
-    using IteratorType = Iterator< Scalar >;
 
 
     /**
@@ -134,22 +121,6 @@ public:
             out.push_back( entry.first );
         }
         return out;
-    }
-
-    /**
-     *  @copydoc ScalarBase::begin()
-     */
-    IteratorType begin() const
-    {
-        return IteratorType{ *this, parameterMap_.begin() };
-    }
-
-    /**
-     *  @copydoc ScalarBase::end()
-     */
-    IteratorType end() const
-    {
-        return IteratorType{ *this, parameterMap_.end() };
     }
 
     /**

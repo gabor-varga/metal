@@ -2,7 +2,7 @@
 #define METAL_SCALARBASE_H
 
 
-#include "Iterator.h"
+#include "Parameter.h"
 #include <exception>
 #include <iostream>
 
@@ -69,6 +69,8 @@ class ScalarBase
 {
 
 public:
+    using PartialSegmentType = typename PartialSegment< Expr >::Type;
+
     /**
      * @brief Returns the value of the expression.
      *
@@ -116,40 +118,6 @@ public:
     }
 
     /**
-     * @brief Returns an iterator pointing to the beginning of the partial derivatives iterable.
-     *
-     * This is not the same iterator as one would use with the map returend by \ref parameterMap
-     * method. It directly associates the parameters with the segment of the partial derivative
-     * vector they refer to.
-     *
-     * @return Iterator< Expr > Iterator pointing to the beginning of the iterable partials
-     *
-     * @see end
-     * @see at
-     */
-    Iterator< Expr > begin() const
-    {
-        return static_cast< const Expr& >( *this ).begin();
-    }
-
-    /**
-     * @brief Returns an iterator pointing to the beginning of the partial derivatives iterable.
-     *
-     * This is not the same iterator as one would use with the map returend by \ref parameterMap
-     * method. It directly associates the parameters with the segment of the partial derivative
-     * vector they refer to.
-     *
-     * @return Iterator< Expr > Iterator pointing to the beginning of the iterable partials
-
-     * @see begin
-     * @see at
-     */
-    Iterator< Expr > end() const
-    {
-        return static_cast< const Expr& >( *this ).end();
-    }
-
-    /**
      * @brief Checks for exitance of a parameter in the expression.
      *
      * @param p Parameter to check existance of
@@ -174,7 +142,7 @@ public:
      * 
      * @see contains
      */
-    typename PartialSegment< Expr >::Type at( const ParameterPtr& p ) const
+    PartialSegmentType at( const ParameterPtr& p ) const
     {
         return static_cast< const Expr& >( *this ).at( p );
     }
