@@ -68,64 +68,6 @@ public:
             parameters_.erase(
                 std::unique( parameters_.begin(), parameters_.end() ), parameters_.end() );
         }
-
-        // if ( left_.parameterMap() == right_.parameterMap() )
-        // {
-        //     // forwardCall_ = ForwardCall::LeftExpr;
-        //     parameterMap_ = left_.parameterMap();
-        //     partial_ = left_.partial() + right_.partial();
-        // }
-        // else if ( left_.size() == 0 )
-        // {
-        //     // forwardCall_ = ForwardCall::RightExpr;
-        //     parameterMap_ = right_.parameterMap();
-        //     partial_ = right_.partial();
-        // }
-        // else if ( right_.size() == 0 )
-        // {
-        //     // forwardCall_ = ForwardCall::LeftExpr;
-        //     parameterMap_ = left_.parameterMap();
-        //     partial_ = left_.partial();
-        // }
-        // else
-        // {
-        //     // forwardCall_ = ForwardCall::ThisExpr;
-        //     ParameterPtrVector params = left_.parameters();
-        //     const auto& rparams = right_.parameters();
-        //     params.insert( params.end(), rparams.begin(), rparams.end() );
-        //     std::sort( params.begin(), params.end() );
-        //     params.erase( std::unique( params.begin(), params.end() ), params.end() );
-
-        //     const int totalDim = std::accumulate( params.begin(), params.end(), 0,
-        //         []( int tmp, const ParameterPtr& p ) { return tmp + p->dim(); } );
-        //     partial_.setZero( totalDim );
-
-        //     int id = 0;
-        //     for ( const auto& p : params )
-        //     {
-        //         const int dim = p->dim();
-        //         parameterMap_[p] = id;
-
-        //         if ( left_.parameterMap().count( p ) )
-        //         {
-        //             // partial_.segment( id, dim )
-        //             //     += op_.leftPartial( left_.value(), right_.value() ) * left_.at( p );
-        //             partial_.segment( id, dim ) += op_.leftPartial( left_.value(), right_.value()
-        //             )
-        //                 * left_.partial().segment( left_.parameterMap().at( p ), p->dim() );
-        //         }
-        //         if ( right_.parameterMap().count( p ) )
-        //         {
-        //             // partial_.segment( id, dim )
-        //             //     += op_.rightPartial( left_.value(), right_.value() ) * right_.at( p );
-        //             partial_.segment( id, dim ) += op_.rightPartial( left_.value(),
-        //             right_.value() )
-        //                 * right_.partial().segment( right_.parameterMap().at( p ), p->dim() );
-        //         }
-
-        //         id += dim;
-        //     }
-        // }
     }
 
     /**
@@ -237,10 +179,6 @@ private:
     double value_;
 
     ParameterPtrVector parameters_;
-
-    // ForwardCall forwardCall_;
-
-    // bool sameParameters_;
 };
 
 } // metal
