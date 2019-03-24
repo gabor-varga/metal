@@ -28,7 +28,7 @@ class ScalarBinaryOp : public ScalarBase< ScalarBinaryOp< Left, Right, Op > >
 
 public:
     /** Alias for type of partial derivative vector. Using Eigen row vector */
-    using Partial = Eigen::Matrix< double, 1, -1 >;
+    using Partial = EigenRowVector;
 
     /** Alias for Eigen segment ET to represent part of the derivative vector */
     using PartialSegment = typename PartialSegment< ScalarBinaryOp< Left, Right, Op > >::Type;

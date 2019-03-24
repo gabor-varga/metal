@@ -69,9 +69,6 @@ class ScalarBase
 {
 
 public:
-    /** Alias for the passed argument in fill method */
-    using FillSegment = Eigen::VectorBlock< Eigen::Matrix< double, 1, -1 >, -1 >;
-
     /**
      * @brief Returns the value of the expression.
      *
