@@ -2,7 +2,7 @@
 #define METAL_TEST_SUITE_H
 
 
-#include "../include/Scalar.h"
+#include "Scalar.h"
 #include "catch.hpp"
 
 

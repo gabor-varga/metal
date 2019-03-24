@@ -1,8 +1,8 @@
 #!/bin/bash
 
-for file in build/test/* 
+for file in build/tests/unit/* 
 do
-    if [ $file != "build/test/libcatch.so" ]
+    if [ $file != "build/tests/unit/libcatch.so" ]
     then
         echo "Running test: " $file
         ./$file

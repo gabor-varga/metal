@@ -1,6 +1,6 @@
-#include "../include/ScalarUnaryOp.h"
-#include "../include/UnaryNegateOp.h"
-#include "../include/UnaryMathOp.h"
+#include "ScalarUnaryOp.h"
+#include "UnaryNegateOp.h"
+#include "UnaryMathOp.h"
 #include "TestSuite.h"
 
 

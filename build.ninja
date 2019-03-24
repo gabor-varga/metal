@@ -2,21 +2,21 @@ src_directory = src
 build_directory = build
 doc_directory = doc
 
-flags = -g -std=c++11 -Weverything -Wno-c++98-compat -Wno-padded -fcomment-block-commands=copydoc -I/usr/include/eigen3
-
+flags = -g -std=c++11 -Weverything -Wno-c++98-compat -Wno-padded -fcomment-block-commands=copydoc -I./include -I/usr/include/eigen3
+test_links = -L./build/tests/unit -Wl,-rpath=build/tests/unit -lcatch
 
 rule example
-    command = clang++ -g $flags $in -o $build_directory/example/$out
+    command = clang++ $flags $in -o $build_directory/examples/$out
 
 rule testConfig
-    command = echo
-    #command = clang++ -g -std=c++11 -fPIC -shared test/catch.cpp -o $build_directory/test/libcatch.so
+    #command = echo
+    command = clang++ -std=c++11 -fPIC -shared tests/unit/catch.cpp -o $build_directory/tests/unit/libcatch.so
 
-rule test
-    command = clang++ -g $flags -L./build/test -Wl,-rpath=build/test -lcatch $in -o $build_directory/test/$out
+rule unit_test
+    command = clang++ $flags $test_links $in -o $build_directory/tests/unit/$out
 
 rule perf_test
-    command = clang++ -O2 $flags -L./build/test -Wl,-rpath=build/test -lcatch $in -o $build_directory/$out
+    command = clang++ -O2 $flags $test_links $in -o $build_directory/tests/perf/$out
 
 rule doc
     command = doxygen $doc_directory/config
@@ -24,6 +24,7 @@ rule doc
 
 build example: example Example.cpp
 build test_config: testConfig
-build test_scalar: test test/ScalarTest.cpp | test_config
-build test_unary_op: test test/ScalarUnaryOpTest.cpp | test_config
-#build Doc: doc
+build test_scalar: unit_test tests/unit/ScalarTest.cpp | test_config
+build test_unary_op: unit_test tests/unit/ScalarUnaryOpTest.cpp | test_config
+build test_perf: perf_test tests/perf/PerfTest.cpp
+build Doc: doc
