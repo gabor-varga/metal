@@ -84,17 +84,9 @@ TEST_CASE( "Scalars can be modified by multiplication by numbers", "[scalar_modi
     {
         Scalar x{ 3.0, "x" };
         x *= 1.5;
-        Scalar::Partial v{ 1 };
-        v << 1.5;
 
-        const auto p = x.parameters().front();
         REQUIRE( x.value() == 4.5 );
-        REQUIRE( x.partial() == v );
-        REQUIRE( x.parameterMap() == ParameterMap{ { p, 0 } } );
-        REQUIRE( x.dim() == 1 );
-        REQUIRE( x.size() == 1 );
-        REQUIRE( x.parameters() == ParameterPtrVector{ p } );
-        REQUIRE( x.at( p ) == v );
+        REQUIRE_PARTIALS_EQUAL( x, 1.5 );
     }
 }
 
@@ -114,16 +106,8 @@ TEST_CASE( "Scalars can be modified by dividing by numbers", "[scalar_modify_div
     {
         Scalar x{ 3.0, "x" };
         x /= 1.5;
-        Scalar::Partial v{ 1 };
-        v << 1.0 / 1.5;
 
-        const auto p = x.parameters().front();
         REQUIRE( x.value() == 2.0 );
-        REQUIRE( x.partial() == v );
-        REQUIRE( x.parameterMap() == ParameterMap{ { p, 0 } } );
-        REQUIRE( x.dim() == 1 );
-        REQUIRE( x.size() == 1 );
-        REQUIRE( x.parameters() == ParameterPtrVector{ p } );
-        REQUIRE( x.at( p ) == v );
+        REQUIRE_PARTIALS_EQUAL( x, 1.0 / 1.5 );
     }
 }
