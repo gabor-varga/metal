@@ -117,13 +117,13 @@ public:
      */
     PartialSegment at( const ParameterPtr& p ) const
     {
-        if ( expr_.parameterMap().count( p ) == 0 )
+        const auto& parameterMap = expr_.parameterMap();
+        if ( parameterMap.count( p ) == 0 )
         {
-            throw std::runtime_error(
-                "Error! Parameter not present in partials: '" + p->name() + "'" );
+            throw std::runtime_error( "Error! Parameter not present in partials: '"
+                + ( p ? p->name() : "NULLPTR" ) + "'" );
         }
-
-        return partial_.segment( expr_.parameterMap().at( p ), p->dim() );
+        return partial_.segment( parameterMap.at( p ), p->dim() );
     }
 
 private:
