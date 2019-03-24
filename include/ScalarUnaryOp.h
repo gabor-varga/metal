@@ -12,6 +12,12 @@ template< typename Expr, typename Op >
 class ScalarUnaryOp;
 
 
+/**
+ * @brief Type trait for the partial segment type of a scalar unary operator.
+ * 
+ * @tparam Expr Type of the sub-expression referenced by this unary operation
+ * @tparam Op Unary operation type
+ */
 template< typename Expr, typename Op >
 struct PartialSegment< ScalarUnaryOp< Expr, Op > >
 {
@@ -36,9 +42,6 @@ class ScalarUnaryOp : public ScalarBase< ScalarUnaryOp< Expr, Op > >
 {
 
 public:
-    /** Alias for type of partial derivative vector. Using Eigen row vector */
-    // using Partial = typename Partial< ScalarUnaryOp< Expr, Op > >::Type;
-
     /** Alias for Eigen segment ET to represent part of the derivative vector */
     using PartialSegment = typename PartialSegment< ScalarUnaryOp< Expr, Op > >::Type;
 
