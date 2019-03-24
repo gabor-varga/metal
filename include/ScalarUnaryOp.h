@@ -101,7 +101,7 @@ public:
      */
     IteratorType begin() const
     {
-        return IteratorType( *this, expr_.parameterMap().begin() );
+        return IteratorType{ *this, expr_.parameterMap().begin() };
     }
 
     /**
@@ -109,7 +109,7 @@ public:
      */
     IteratorType end() const
     {
-        return IteratorType( *this, expr_.parameterMap().end() );
+        return IteratorType{ *this, expr_.parameterMap().end() };
     }
 
     /**
