@@ -193,9 +193,9 @@ public:
      * @return true Expression contains partial w.r.t. the parameter
      * @return false Expression does not contains partial w.r.t. the parameter
      */
-    bool count( const ParameterPtr& p ) const
+    bool contains( const ParameterPtr& p ) const
     {
-        return static_cast< const Expr& >( *this ).count( p );
+        return static_cast< const Expr& >( *this ).contains( p );
     }
 
     /**

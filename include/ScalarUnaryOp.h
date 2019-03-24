@@ -87,7 +87,7 @@ public:
     /**
      *  @copydoc ScalarBase::parameterMap()
      */
-    const ParameterMap& parameterMap() const
+    ParameterMap parameterMap() const
     {
         return expr_.parameterMap();
     }
@@ -133,11 +133,11 @@ public:
     }
 
     /**
-     *  @copydoc ScalarBase::count()
+     *  @copydoc ScalarBase::contains()
      */
-    bool count( const ParameterPtr& p ) const
+    bool contains( const ParameterPtr& p ) const
     {
-        return expr_.count( p );
+        return expr_.contains( p );
     }
 
     /**
@@ -145,7 +145,7 @@ public:
      */
     PartialSegment at( const ParameterPtr& p ) const
     {
-        if ( !count( p ) )
+        if ( !contains( p ) )
         {
             throw std::runtime_error( "Error! Parameter not present in partials: '"
                 + ( p ? p->name() : "NULLPTR" ) + "'" );

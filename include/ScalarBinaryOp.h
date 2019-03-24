@@ -136,9 +136,9 @@ public:
     }
 
     /**
-     *  @copydoc ScalarBase::count()
+     *  @copydoc ScalarBase::contains()
      */
-    bool count( const ParameterPtr& p ) const
+    bool contains( const ParameterPtr& p ) const
     {
         return std::find( parameters_.begin(), parameters_.end(), p ) != parameters_.end();
     }
@@ -157,11 +157,11 @@ public:
      */
     void accum( EigenRowVectorSegment& partial, double scalar, const ParameterPtr& p ) const
     {
-        if ( left_.count( p ) )
+        if ( left_.contains( p ) )
         {
             left_.accum( partial, scalar * op_.leftPartial( lvalue_, rvalue_ ), p );
         }
-        if ( right_.count( p ) )
+        if ( right_.contains( p ) )
         {
             right_.accum( partial, scalar * op_.rightPartial( lvalue_, rvalue_ ), p );
         }
