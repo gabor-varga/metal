@@ -19,10 +19,10 @@ template< typename Expr >
 struct SineOp
 {
     /** Alias for partial type of the input expression */
-    using Input = typename Expr::Partial;
+    using Input = typename Partial< Expr >::Type;
 
     /** Alias for the output partial expression type */
-    using Output = decltype( std::declval< Input >().operator*( double{} ) );
+    using Output = decltype( std::declval< Input >() * double{} );
 
 
     /**

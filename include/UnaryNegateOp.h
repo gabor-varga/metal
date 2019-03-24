@@ -18,10 +18,10 @@ template< typename Expr >
 struct NegateOp
 {
     /** Alias for partial type of the input expression */
-    using Input = typename Expr::Partial;
+    using Input = typename Partial< Expr >::Type;
 
     /** Alias for the output partial expression type */
-    using Output = decltype( std::declval< Input >().operator-() );
+    using Output = decltype( -std::declval< Input >() );
 
 
     /**

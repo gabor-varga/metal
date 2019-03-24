@@ -3,11 +3,24 @@
 
 
 #include "ScalarBase.h"
-#include <numeric>
 
 
 namespace metal
 {
+
+
+template< typename Left, typename Right, typename Op >
+class ScalarBinaryOp;
+
+
+template< typename Left, typename Right, typename Op >
+struct PartialSegment< ScalarBinaryOp< Left, Right, Op > >
+{
+    /** Alias for internal type */
+    using Type = decltype( double{} * std::declval< Left >().at( ParameterPtr{} )
+        + double{} * std::declval< Right >().at( ParameterPtr{} ) );
+};
+
 
 template< typename Left, typename Right, typename Op >
 class ScalarBinaryOp : public ScalarBase< ScalarBinaryOp< Left, Right, Op > >
@@ -15,10 +28,10 @@ class ScalarBinaryOp : public ScalarBase< ScalarBinaryOp< Left, Right, Op > >
 
 public:
     /** Alias for type of partial derivative vector. Using Eigen row vector */
-    using Partial = Eigen::Matrix< double, 1, -1 >;
+    using PartialType = Eigen::Matrix< double, 1, -1 >;
 
     /** Alias for Eigen segment ET to represent part of the derivative vector */
-    using PartialSegment = decltype( std::declval< Partial >().segment( int{}, int{} ) );
+    using PartialSegmentType = typename PartialSegment< ScalarBinaryOp< Left, Right, Op > >::Type;
 
     /** Alias for the iterator */
     using IteratorType = Iterator< ScalarBinaryOp< Left, Right, Op > >;
@@ -36,64 +49,83 @@ public:
         : left_{ left }
         , right_{ right }
         , op_{ op }
-        , partial_{}
-        , parameterMap_{}
+        , lvalue_{ left_.value() }
+        , rvalue_{ right_.value() }
+        , value_{ op_.applyToValue( lvalue_, rvalue_ ) }
+        , parameters_{ left_.parameters() }
     {
-        if ( left_.parameterMap() == right_.parameterMap() )
-        {
-            // forwardCall_ = ForwardCall::LeftExpr;
-            parameterMap_ = left_.parameterMap();
-            partial_ = left_.partial() + right_.partial();
-        }
-        else if ( left_.size() == 0 )
-        {
-            // forwardCall_ = ForwardCall::RightExpr;
-            parameterMap_ = right_.parameterMap();
-            partial_ = right_.partial();
-        }
-        else if ( right_.size() == 0 )
-        {
-            // forwardCall_ = ForwardCall::RightExpr;
-            parameterMap_ = left_.parameterMap();
-            partial_ = left_.partial();
-        }
-        else
-        {
-            // forwardCall_ = ForwardCall::ThisExpr;
-            ParameterPtrVector params = left_.parameters();
-            const auto& rparams = right_.parameters();
-            params.insert( params.end(), rparams.begin(), rparams.end() );
-            std::sort( params.begin(), params.end() );
-            params.erase( std::unique( params.begin(), params.end() ), params.end() );
+        const bool condition1 = parameters_.size() == 0;
+        const bool condition2 = right_.size() && left_.parameterMap() != right_.parameterMap();
 
-            const int totalDim = std::accumulate( params.begin(), params.end(), 0,
-                []( int tmp, const ParameterPtr& p ) { return tmp + p->dim(); } );
-            partial_.setZero( totalDim );
-
-            int id = 0;
-            for ( const auto& p : params )
-            {
-                const int dim = p->dim();
-                parameterMap_[p] = id;
-
-                if ( left_.parameterMap().count( p ) )
-                {
-                    // partial_.segment( id, dim )
-                    //     += op_.leftPartial( left_.value(), right_.value() ) * left_.at( p );
-                    partial_.segment( id, dim ) += op_.leftPartial( left_.value(), right_.value() )
-                        * left_.partial().segment( left_.parameterMap().at( p ), p->dim() );
-                }
-                if ( right_.parameterMap().count( p ) )
-                {
-                    // partial_.segment( id, dim )
-                    //     += op_.rightPartial( left_.value(), right_.value() ) * right_.at( p );
-                    partial_.segment( id, dim ) += op_.rightPartial( left_.value(), right_.value() )
-                        * right_.partial().segment( right_.parameterMap().at( p ), p->dim() );
-                }
-
-                id += dim;
-            }
+        if ( condition1 || condition2 )
+        {
+            const auto& params = right_.parameters();
+            parameters_.insert( parameters_.end(), params.begin(), params.end() );
         }
+        if ( condition2 )
+        {
+            std::sort( parameters_.begin(), parameters_.end() );
+            parameters_.erase(
+                std::unique( parameters_.begin(), parameters_.end() ), parameters_.end() );
+        }
+
+        // if ( left_.parameterMap() == right_.parameterMap() )
+        // {
+        //     // forwardCall_ = ForwardCall::LeftExpr;
+        //     parameterMap_ = left_.parameterMap();
+        //     partial_ = left_.partial() + right_.partial();
+        // }
+        // else if ( left_.size() == 0 )
+        // {
+        //     // forwardCall_ = ForwardCall::RightExpr;
+        //     parameterMap_ = right_.parameterMap();
+        //     partial_ = right_.partial();
+        // }
+        // else if ( right_.size() == 0 )
+        // {
+        //     // forwardCall_ = ForwardCall::LeftExpr;
+        //     parameterMap_ = left_.parameterMap();
+        //     partial_ = left_.partial();
+        // }
+        // else
+        // {
+        //     // forwardCall_ = ForwardCall::ThisExpr;
+        //     ParameterPtrVector params = left_.parameters();
+        //     const auto& rparams = right_.parameters();
+        //     params.insert( params.end(), rparams.begin(), rparams.end() );
+        //     std::sort( params.begin(), params.end() );
+        //     params.erase( std::unique( params.begin(), params.end() ), params.end() );
+
+        //     const int totalDim = std::accumulate( params.begin(), params.end(), 0,
+        //         []( int tmp, const ParameterPtr& p ) { return tmp + p->dim(); } );
+        //     partial_.setZero( totalDim );
+
+        //     int id = 0;
+        //     for ( const auto& p : params )
+        //     {
+        //         const int dim = p->dim();
+        //         parameterMap_[p] = id;
+
+        //         if ( left_.parameterMap().count( p ) )
+        //         {
+        //             // partial_.segment( id, dim )
+        //             //     += op_.leftPartial( left_.value(), right_.value() ) * left_.at( p );
+        //             partial_.segment( id, dim ) += op_.leftPartial( left_.value(), right_.value()
+        //             )
+        //                 * left_.partial().segment( left_.parameterMap().at( p ), p->dim() );
+        //         }
+        //         if ( right_.parameterMap().count( p ) )
+        //         {
+        //             // partial_.segment( id, dim )
+        //             //     += op_.rightPartial( left_.value(), right_.value() ) * right_.at( p );
+        //             partial_.segment( id, dim ) += op_.rightPartial( left_.value(),
+        //             right_.value() )
+        //                 * right_.partial().segment( right_.parameterMap().at( p ), p->dim() );
+        //         }
+
+        //         id += dim;
+        //     }
+        // }
     }
 
     /**
@@ -101,23 +133,23 @@ public:
      */
     double value() const
     {
-        return op_.applyToValue( left_.value(), right_.value() );
+        return value_;
     }
 
     /**
      *  @copydoc ScalarBase::partial()
      */
-    const Partial& partial() const
+    PartialType partial() const
     {
-        return partial_;
+        return PartialType{};
     }
 
     /**
      *  @copydoc ScalarBase::parameterMap()
      */
-    const ParameterMap& parameterMap() const
+    ParameterMap parameterMap() const
     {
-        return parameterMap_;
+        return ParameterMap{};
     }
 
     /**
@@ -125,7 +157,8 @@ public:
      */
     size_t dim() const
     {
-        return static_cast< size_t >( partial_.size() );
+        const auto func = []( int tmp, const ParameterPtr& p ) { return tmp + p->dim(); };
+        return std::accumulate( parameters_.begin(), parameters_.end(), size_t{ 0 }, func );
     }
 
     /**
@@ -133,15 +166,15 @@ public:
      */
     size_t size() const
     {
-        return parameterMap_.size();
+        return parameters_.size();
     }
 
     /**
      *  @copydoc ScalarBase::parameters()
      */
-    ParameterPtrVector parameters() const
+    const ParameterPtrVector& parameters() const
     {
-        return left_.parameters();
+        return parameters_;
     }
 
     /**
@@ -149,7 +182,7 @@ public:
      */
     IteratorType begin() const
     {
-        return IteratorType( *this, parameterMap_.begin() );
+        return IteratorType{ *this, ParameterMap{}.begin() };
     }
 
     /**
@@ -157,21 +190,39 @@ public:
      */
     IteratorType end() const
     {
-        return IteratorType( *this, parameterMap_.end() );
+        return IteratorType{ *this, ParameterMap{}.end() };
+    }
+
+    /**
+     *  @copydoc ScalarBase::count()
+     */
+    bool count( const ParameterPtr& p ) const
+    {
+        return std::find( parameters_.begin(), parameters_.end(), p ) != parameters_.end();
     }
 
     /**
      *  @copydoc ScalarBase::at()
      */
-    PartialSegment at( const ParameterPtr& p ) const
+    PartialSegmentType at( const ParameterPtr& p ) const
     {
-        if ( parameterMap_.count( p ) == 0 )
-        {
-            throw std::runtime_error(
-                "Error! Parameter not present in partials: '" + p->name() + "'" );
-        }
+        return op_.leftPartial( lvalue_, rvalue_ ) * left_.at( p )
+            + op_.rightPartial( lvalue_, rvalue_ ) * right_.at( p );
+    }
 
-        return partial_.segment( parameterMap_.at( p ), p->dim() );
+    /**
+     *  @copydoc ScalarBase::accum()
+     */
+    void accum( EigenRowVectorSegment& partial, double scalar, const ParameterPtr& p ) const
+    {
+        if ( left_.count( p ) )
+        {
+            left_.accum( partial, scalar * op_.leftPartial( lvalue_, rvalue_ ), p );
+        }
+        if ( right_.count( p ) )
+        {
+            right_.accum( partial, scalar * op_.rightPartial( lvalue_, rvalue_ ), p );
+        }
     }
 
 private:
@@ -181,9 +232,11 @@ private:
 
     Op op_;
 
-    Partial partial_;
+    double lvalue_;
+    double rvalue_;
+    double value_;
 
-    ParameterMap parameterMap_;
+    ParameterPtrVector parameters_;
 
     // ForwardCall forwardCall_;
 

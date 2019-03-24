@@ -2,8 +2,9 @@
 #define METAL_SCALAR_H
 
 
-#include "ScalarBase.h"
 #include "NamedParameter.h"
+#include "ScalarBase.h"
+#include <numeric>
 
 
 namespace metal
@@ -70,9 +71,22 @@ public:
     template< typename Expr >
     Scalar( const ScalarBase< Expr >& expr )
         : value_{ expr.value() }
-        , partial_{ expr.partial() }
-        , parameterMap_{ expr.parameterMap() }
+        , partial_{}
+        , parameterMap_{}
     {
+        const int totalDim = static_cast< int >( expr.dim() );
+        partial_.setZero( totalDim );
+
+        int id = 0;
+        const auto& params = expr.parameters();
+        for ( const auto& p : params )
+        {
+            const int dim = p->dim();
+            auto segment = partial_.segment( id, dim );
+            expr.accum( segment, 1.0, p );
+            parameterMap_[p] = id;
+            id += dim;
+        }
     }
 
     /**
@@ -145,11 +159,19 @@ public:
     }
 
     /**
+     *  @copydoc ScalarBase::count()
+     */
+    bool count( const ParameterPtr& p ) const
+    {
+        return parameterMap_.count( p );
+    }
+
+    /**
      *  @copydoc ScalarBase::at()
      */
     PartialSegment at( const ParameterPtr& p ) const
     {
-        if ( parameterMap_.count( p ) == 0 )
+        if ( !count( p ) )
         {
             throw std::runtime_error( "Error! Parameter not present in partials: '"
                 + ( p ? p->name() : "NULLPTR" ) + "'" );
@@ -158,12 +180,20 @@ public:
     }
 
     /**
+     *  @copydoc ScalarBase::accum()
+     */
+    void accum( EigenRowVectorSegment& partial, double scalar, const ParameterPtr& p ) const
+    {
+        partial += scalar * at( p );
+    }
+
+    /**
      * @brief In-place addition operator with a number.
-     * 
+     *
      * @param other Floating point value to add
      * @return Scalar& Reference to modified object
      */
-    Scalar& operator+= ( double other )
+    Scalar& operator+=( double other )
     {
         value_ += other;
         return *this;
@@ -171,11 +201,11 @@ public:
 
     /**
      * @brief In-place subtraction operator with a number.
-     * 
+     *
      * @param other Floating point value to subtract
      * @return Scalar& Reference to modified object
      */
-    Scalar& operator-= ( double other )
+    Scalar& operator-=( double other )
     {
         value_ -= other;
         return *this;
@@ -183,11 +213,11 @@ public:
 
     /**
      * @brief In-place multiplication operator with a number.
-     * 
+     *
      * @param other Floating point value to multiply with
      * @return Scalar& Reference to modified object
      */
-    Scalar& operator*= ( double other )
+    Scalar& operator*=( double other )
     {
         value_ *= other;
         partial_ *= other;
@@ -196,11 +226,11 @@ public:
 
     /**
      * @brief In-place division operator with a number.
-     * 
+     *
      * @param other Floating point value to divide with
      * @return Scalar& Reference to modified object
      */
-    Scalar& operator/= ( double other )
+    Scalar& operator/=( double other )
     {
         value_ /= other;
         partial_ /= other;

@@ -8,6 +8,26 @@
 namespace metal
 {
 
+template< typename Expr, typename Op >
+class ScalarUnaryOp;
+
+
+template< typename Expr, typename Op >
+struct Partial< ScalarUnaryOp< Expr, Op > >
+{
+    /** Alias for internal type */
+    using Type = typename Op::Output;
+};
+
+
+// template< typename Expr, typename Op >
+// struct PartialSegment< ScalarUnaryOp< Expr, Op > >
+// {
+//     /** Alias for internal type */
+//     using Type = decltype( std::declval< Partial >().segment( int{}, int{} ) );
+// };
+
+
 /**
  * @brief Proxy ET type to represent a unary operation in which exactly one other expression
  * (scalar) take part in.
@@ -25,10 +45,10 @@ class ScalarUnaryOp : public ScalarBase< ScalarUnaryOp< Expr, Op > >
 
 public:
     /** Alias for type of partial derivative vector. Using Eigen row vector */
-    using Partial = typename Op::Output;
+    using PartialType = typename Partial< ScalarUnaryOp< Expr, Op > >::Type;
 
     /** Alias for Eigen segment ET to represent part of the derivative vector */
-    using PartialSegment = decltype( std::declval< Partial >().segment( int{}, int{} ) );
+    using PartialSegmentType = typename PartialSegment< ScalarUnaryOp< Expr, Op > >::Type;
 
     /** Alias for the iterator */
     using IteratorType = Iterator< ScalarUnaryOp< Expr, Op > >;
@@ -59,7 +79,7 @@ public:
     /**
      *  @copydoc ScalarBase::partial()
      */
-    Partial partial() const
+    PartialType partial() const
     {
         return partial_;
     }
@@ -113,17 +133,32 @@ public:
     }
 
     /**
+     *  @copydoc ScalarBase::count()
+     */
+    bool count( const ParameterPtr& p ) const
+    {
+        return expr_.count( p );
+    }
+
+    /**
      *  @copydoc ScalarBase::at()
      */
-    PartialSegment at( const ParameterPtr& p ) const
+    PartialSegmentType at( const ParameterPtr& p ) const
     {
-        const auto& parameterMap = expr_.parameterMap();
-        if ( parameterMap.count( p ) == 0 )
+        if ( !count( p ) )
         {
             throw std::runtime_error( "Error! Parameter not present in partials: '"
                 + ( p ? p->name() : "NULLPTR" ) + "'" );
         }
-        return partial_.segment( parameterMap.at( p ), p->dim() );
+        return partial_.segment( expr_.parameterMap().at( p ), p->dim() );
+    }
+
+    /**
+     *  @copydoc ScalarBase::accum()
+     */
+    void accum( EigenRowVectorSegment& partial, double scalar, const ParameterPtr& p ) const
+    {
+        partial += scalar * at( p );
     }
 
 private:
@@ -135,7 +170,7 @@ private:
 
     /** Internal cached expression for the partial derivative vector after applying the
      * operation */
-    Partial partial_;
+    PartialType partial_;
 };
 
 } // metal

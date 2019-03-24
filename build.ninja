@@ -9,7 +9,8 @@ rule example
     command = clang++ -g $flags $in -o $build_directory/example/$out
 
 rule testConfig
-    command = clang++ -g -std=c++11 -fPIC -shared test/catch.cpp -o $build_directory/test/libcatch.so
+    command = echo
+    #command = clang++ -g -std=c++11 -fPIC -shared test/catch.cpp -o $build_directory/test/libcatch.so
 
 rule test
     command = clang++ -g $flags -L./build/test -Wl,-rpath=build/test -lcatch $in -o $build_directory/test/$out
@@ -25,4 +26,4 @@ build example: example Example.cpp
 build test_config: testConfig
 build test_scalar: test test/ScalarTest.cpp | test_config
 build test_unary_op: test test/ScalarUnaryOpTest.cpp | test_config
-build Doc: doc
+#build Doc: doc

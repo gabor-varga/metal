@@ -24,6 +24,15 @@
 namespace metal
 {
 
+/* Alias for eigen row vector */
+using EigenRowVector = Eigen::Matrix< double, 1, -1 >;
+
+/* Alias for eigen row vector segment */
+using EigenRowVectorSegment = Eigen::VectorBlock< EigenRowVector, -1 >;
+
+/* Alias for eigen row vector const segment */
+using EigenRowVectorConstSegment = Eigen::VectorBlock< const EigenRowVector, -1 >;
+
 /**
  * @brief Type trait for the partial type of a specific ET class
  *
@@ -33,7 +42,7 @@ template< typename Expr >
 struct Partial
 {
     /** Alias for internal type */
-    using Type = Eigen::Matrix< double, 1, -1 >;
+    using Type = EigenRowVector;
 };
 
 /**
@@ -62,6 +71,9 @@ class ScalarBase
 {
 
 public:
+    /** Alias for the passed argument in fill method */
+    using FillSegment = Eigen::VectorBlock< Eigen::Matrix< double, 1, -1 >, -1 >;
+
     /**
      * @brief Returns the value of the expression.
      *
@@ -180,6 +192,18 @@ public:
     }
 
     /**
+     * @brief Checks for exitance of a parameter in the expression.
+     *
+     * @param p Parameter to check existance of
+     * @return true Expression contains partial w.r.t. the parameter
+     * @return false Expression does not contains partial w.r.t. the parameter
+     */
+    bool count( const ParameterPtr& p ) const
+    {
+        return static_cast< const Expr& >( *this ).count( p );
+    }
+
+    /**
      * @brief Returns the part of the partial derivative vector that refers to the specified
      * parameter.
      *
@@ -191,6 +215,19 @@ public:
     typename PartialSegment< Expr >::Type at( const ParameterPtr& p ) const
     {
         return static_cast< const Expr& >( *this ).at( p );
+    }
+
+    /**
+     * @brief Accumulates the target partial vector with the partial vector information coming from
+     * the expression.
+     *
+     * @param partial Target partial vector
+     * @param scalar Partial multiplier
+     * @param p Parameter to add information of
+     */
+    void accum( EigenRowVectorSegment& partial, double scalar, const ParameterPtr& p ) const
+    {
+        static_cast< const Expr& >( *this ).accum( partial, scalar, p );
     }
 };
 
