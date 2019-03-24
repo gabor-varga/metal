@@ -9,8 +9,7 @@ rule example
     command = clang++ $flags $in -o $build_directory/examples/$out
 
 rule testConfig
-    command = echo
-    #command = clang++ -std=c++11 -fPIC -shared tests/unit/catch.cpp -o $build_directory/tests/unit/libcatch.so
+    command = clang++ -std=c++11 -fPIC -shared tests/unit/catch.cpp -o $build_directory/tests/unit/libcatch.so
 
 rule unit_test
     command = clang++ $flags $test_links $in -o $build_directory/tests/unit/$out
@@ -27,4 +26,4 @@ build test_config: testConfig
 build test_scalar: unit_test tests/unit/ScalarTest.cpp | test_config
 build test_unary_op: unit_test tests/unit/ScalarUnaryOpTest.cpp | test_config
 build test_perf: perf_test tests/perf/PerfTest.cpp
-#build Doc: doc
+build Doc: doc
