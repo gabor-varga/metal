@@ -36,9 +36,11 @@
 .vscode
 
 # Build directory
-build/example/*
-build/test/*
-!build/*/.gitkeep
+build/examples/*
+build/test/unit/*
+build/test/perf/*
+!build/examples/.gitkeep
+!build/tests/*/.gitkeep
 
 # Ninja build logs
 .ninja_*
