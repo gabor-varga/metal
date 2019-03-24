@@ -73,6 +73,7 @@ class ScalarBase
 {
 
 public:
+    /** Alias for partial segment returned by \ref at method */
     using PartialSegmentType = typename PartialSegment< Expr >::Type;
 
     /**
@@ -86,7 +87,7 @@ public:
     }
 
     /**
-     * @brief Returns the dimension of the partial derivative vector returned by \ref partial.
+     * @brief Returns the dimension of the partial derivative vector.
      *
      * @return size_t Size of the derivative vector
      */
@@ -110,7 +111,6 @@ public:
 
     /**
      * @brief Returns the vector of parameters that take part in the partial computation.
-     * Essentially returns the keys of the map given by \ref parameterMap.
      *
      * @return ParameterPtrVector Vector of parameters in partial computation
      *

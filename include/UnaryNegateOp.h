@@ -11,10 +11,7 @@ namespace metal
 /**
  * @brief Unary operation taken by \ref ScalarUnaryOp object to define the expression for
  * computing the negation of an expression.
- *
- * @tparam Expr Type of expression to compute negation of
  */
-template< typename Expr >
 struct NegateOp
 {
     /**
@@ -30,7 +27,7 @@ struct NegateOp
 
     /**
      * @brief Computes the partial derivative of the unary operation.
-     * 
+     *
      * @return double Partial
      */
     double partial( double ) const
@@ -46,14 +43,13 @@ struct NegateOp
  *
  * @tparam Expr Type of the expression
  * @param expr Expression to apply negation to
- * @return ScalarUnaryOp< Expr, NegateOp< Expr > > Expression that represents the
+ * @return ScalarUnaryOp< Expr, NegateOp > Expression that represents the
  * sine operation
  */
 template< typename Expr >
-ScalarUnaryOp< Expr, NegateOp< Expr > > operator-( const ScalarBase< Expr >& expr )
+ScalarUnaryOp< Expr, NegateOp > operator-( const ScalarBase< Expr >& expr )
 {
-    return ScalarUnaryOp< Expr, NegateOp< Expr > >(
-        static_cast< const Expr& >( expr ), NegateOp< Expr >() );
+    return ScalarUnaryOp< Expr, NegateOp >( static_cast< const Expr& >( expr ), NegateOp() );
 }
 
 } // metal

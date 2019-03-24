@@ -11,10 +11,7 @@ namespace metal
 /**
  * @brief Unary operation taken by \ref ScalarUnaryOp object to define the expression for adding
  * an expression and to a floating point number.
- *
- * @tparam Expr Type of expression to which addition is defined
  */
-template< typename Expr >
 class UnaryAdditionOp
 {
 
@@ -62,28 +59,28 @@ private:
  * @tparam Expr Type of the expression
  * @param expr Expression to add to
  * @param addend Floating point value to add
- * @return ScalarUnaryOp< Expr, UnaryAdditionOp< Expr > > Expression that represents the
+ * @return ScalarUnaryOp< Expr, UnaryAdditionOp > Expression that represents the
  * addition
  */
 template< typename Expr >
-ScalarUnaryOp< Expr, UnaryAdditionOp< Expr > > operator+(
+ScalarUnaryOp< Expr, UnaryAdditionOp > operator+(
     const ScalarBase< Expr >& expr, double addend )
 {
-    return ScalarUnaryOp< Expr, UnaryAdditionOp< Expr > >(
-        static_cast< const Expr& >( expr ), UnaryAdditionOp< Expr >( addend ) );
+    return ScalarUnaryOp< Expr, UnaryAdditionOp >(
+        static_cast< const Expr& >( expr ), UnaryAdditionOp( addend ) );
 }
 
 /**
  * @brief Binary addition operator between a floating point number and an expression.
  *
- * @tparam Expr Expr Type of the expression
+ * @tparam Expr Type of the expression
  * @param augend Floating point value to add to
  * @param expr Expression to add
- * @return ScalarUnaryOp< Expr, UnaryAdditionOp< Expr > > Expression that represents the
+ * @return ScalarUnaryOp< Expr, UnaryAdditionOp > Expression that represents the
  * addition
  */
 template< typename Expr >
-ScalarUnaryOp< Expr, UnaryAdditionOp< Expr > > operator+(
+ScalarUnaryOp< Expr, UnaryAdditionOp > operator+(
     double augend, const ScalarBase< Expr >& expr )
 {
     // Since addition is commutative, just delegate
