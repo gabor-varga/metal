@@ -81,15 +81,29 @@ public:
         return *this;
     }
 
-    /**
-     * @brief Dereferencing operator that returns the refered partial item.
-     *
-     * @return Record Composite of the parameter and partial derivative value
-     */
+
     template< bool T = ImplementsParameterVector< Expr >::Value >
-    typename std::enable_if< T, Record >::type operator*()
+    typename std::enable_if< T, ParameterPtr >::type key()
     {
-        return std::make_pair( iter_, expr_.at( *iter_ ) );
+        return *iter_;
+    }
+
+    template< bool T = ImplementsParameterVector< Expr >::Value >
+    typename std::enable_if< !T, ParameterPtr >::type key()
+    {
+        return iter_->first;
+    }
+
+    template< bool T = ImplementsParameterVector< Expr >::Value >
+    typename std::enable_if< T, typename Expr::PartialSegment >::type value()
+    {
+        return expr_.at( *iter_ );
+    }
+
+    template< bool T = ImplementsParameterVector< Expr >::Value >
+    typename std::enable_if< !T, typename Expr::PartialSegment >::type value()
+    {
+        return expr_.at( iter_->first );
     }
 
     /**
@@ -97,10 +111,9 @@ public:
      *
      * @return Record Composite of the parameter and partial derivative value
      */
-    template< bool T = ImplementsParameterVector< Expr >::Value >
-    typename std::enable_if< !T, Record >::type operator*()
+    Record operator*()
     {
-        return std::make_pair( iter_->first, expr_.at( iter_->first ) );
+        return std::make_pair( key(), value() );
     }
 
 private:

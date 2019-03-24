@@ -11,7 +11,8 @@ int main()
 
     const auto y = sin( a );
     std::cout << y.at( a.parameters().front() ) << std::endl;
-    // std::cout << metal::Scalar{ y } << std::endl;
+    std::cout << y << std::endl;
+    std::cout << metal::Scalar{ y } << std::endl;
     // std::cout << cos( a.value() ) << std::endl;
 
     return 0;

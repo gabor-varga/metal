@@ -12,6 +12,7 @@ namespace metal
 
 class Scalar;
 
+
 template<>
 struct ImplementsParameterVector< Scalar >
 {
@@ -31,10 +32,10 @@ class Scalar : public ScalarBase< Scalar >
 
 public:
     /** Alias for type of partial derivative vector. Using Eigen row vector */
-    using Partial = EigenRowVector;
+    using Partial = typename Partial< Scalar >::Type;
 
     /** Alias for Eigen segment ET to represent part of the derivative vector */
-    using PartialSegment = Eigen::VectorBlock< const Partial, -1 >;
+    using PartialSegment = typename PartialSegment< Scalar >::Type;
 
     /** Alias for the iterator */
     using IteratorType = Iterator< Scalar >;

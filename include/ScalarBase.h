@@ -199,17 +199,17 @@ public:
  *
  * @tparam Expr Type of the expression to be printed
  * @param os Output stream to print to
- * @param scalar Expression to be printed
+ * @param expr Expression to be printed
  * @return std::ostream& Modified output stream
  */
 template< typename Expr >
-std::ostream& operator<<( std::ostream& os, const ScalarBase< Expr >& scalar )
+std::ostream& operator<<( std::ostream& os, const ScalarBase< Expr >& expr )
 {
-    os << scalar.value();
+    os << expr.value();
     os << " ( ";
-    for ( const auto& entry : scalar )
+    for ( const auto& entry : expr.parameters() )
     {
-        os << entry.first->name() << ": " << entry.second << " ";
+        os << entry->name() << ": " << expr.at( entry ) << " ";
     }
     os << ")";
     return os;

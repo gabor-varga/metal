@@ -9,6 +9,10 @@ namespace metal
 {
 
 template< typename Expr, typename Op >
+class ScalarUnaryOp;
+
+
+template< typename Expr, typename Op >
 struct PartialSegment< ScalarUnaryOp< Expr, Op > >
 {
     /** Alias for internal type */
@@ -95,7 +99,7 @@ public:
      */
     IteratorType begin() const
     {
-        return IteratorType{ *this, expr_.parameterMap().begin() };
+        return IteratorType{ *this, expr_.parameters().begin() };
     }
 
     /**
@@ -103,7 +107,7 @@ public:
      */
     IteratorType end() const
     {
-        return IteratorType{ *this, expr_.parameterMap().end() };
+        return IteratorType{ *this, expr_.parameters().end() };
     }
 
     /**
