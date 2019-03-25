@@ -12,7 +12,7 @@ namespace metal
  * @brief Unary operation taken by \ref ScalarUnaryOp object to define the expression for
  * computing the negation of an expression.
  */
-struct NegateOp
+struct UnaryNegateOp
 {
     /**
      * @brief Applies the transformation on the value of an expression.
@@ -43,13 +43,14 @@ struct NegateOp
  *
  * @tparam Expr Type of the expression
  * @param expr Expression to apply negation to
- * @return ScalarUnaryOp< Expr, NegateOp > Expression that represents the
+ * @return ScalarUnaryOp< Expr, UnaryNegateOp > Expression that represents the
  * sine operation
  */
 template< typename Expr >
-ScalarUnaryOp< Expr, NegateOp > operator-( const ScalarBase< Expr >& expr )
+ScalarUnaryOp< Expr, UnaryNegateOp > operator-( const ScalarBase< Expr >& expr )
 {
-    return ScalarUnaryOp< Expr, NegateOp >( static_cast< const Expr& >( expr ), NegateOp() );
+    return ScalarUnaryOp< Expr, UnaryNegateOp >{ static_cast< const Expr& >( expr ),
+        UnaryNegateOp{} };
 }
 
 } // metal

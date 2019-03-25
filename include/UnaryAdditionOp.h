@@ -3,6 +3,7 @@
 
 
 #include "ScalarUnaryOp.h"
+#include "UnaryNegateOp.h"
 
 
 namespace metal
@@ -39,7 +40,7 @@ public:
 
     /**
      * @brief Computes the partial derivative of the unary operation.
-     * 
+     *
      * @return double Partial
      */
     double partial( double ) const
@@ -63,11 +64,10 @@ private:
  * addition
  */
 template< typename Expr >
-ScalarUnaryOp< Expr, UnaryAdditionOp > operator+(
-    const ScalarBase< Expr >& expr, double addend )
+ScalarUnaryOp< Expr, UnaryAdditionOp > operator+( const ScalarBase< Expr >& expr, double addend )
 {
-    return ScalarUnaryOp< Expr, UnaryAdditionOp >(
-        static_cast< const Expr& >( expr ), UnaryAdditionOp( addend ) );
+    return ScalarUnaryOp< Expr, UnaryAdditionOp >{ static_cast< const Expr& >( expr ),
+        UnaryAdditionOp{ addend } };
 }
 
 /**
@@ -80,12 +80,45 @@ ScalarUnaryOp< Expr, UnaryAdditionOp > operator+(
  * addition
  */
 template< typename Expr >
-ScalarUnaryOp< Expr, UnaryAdditionOp > operator+(
-    double augend, const ScalarBase< Expr >& expr )
+ScalarUnaryOp< Expr, UnaryAdditionOp > operator+( double augend, const ScalarBase< Expr >& expr )
 {
     // Since addition is commutative, just delegate
     return expr + augend;
 }
+
+// /**
+//  * @brief Binary subtraction operator between an expression and a floating point number.
+//  *
+//  * @tparam Expr Type of the expression
+//  * @param expr Expression to subtract from
+//  * @param subtrahend Floating point value to subtract
+//  * @return ScalarUnaryOp< Expr, UnaryAdditionOp > Expression that represents the
+//  * inverse addition with negative subtrahend
+//  */
+// template< typename Expr >
+// ScalarUnaryOp< Expr, UnaryAdditionOp > operator-(
+//     const ScalarBase< Expr >& expr, double subtrahend )
+// {
+//     // Since subtraction is just addition with negated subtrahend
+//     return expr + (-subtrahend);
+// }
+
+// /**
+//  * @brief Binary subtraction operator between a floating point number and an expression.
+//  *
+//  * @tparam Expr Type of the expression
+//  * @param minuend Floating point value to subtract from
+//  * @param expr Expression to subtract
+//  * @return ScalarUnaryOp< ScalarUnaryOp< Expr, UnaryNegateOp >, UnaryAdditionOp > Expression that
+//  * represents the inverse addition with negated expression
+//  */
+// template< typename Expr >
+// ScalarUnaryOp< ScalarUnaryOp< Expr, UnaryNegateOp >, UnaryAdditionOp > operator-(
+//     double minuend, const ScalarBase< Expr >& expr )
+// {
+//     // Since subtraction is just addition with negated subtrahend
+//     return minuend + (-expr);
+// }
 
 } // metal
 

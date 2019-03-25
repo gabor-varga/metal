@@ -67,8 +67,8 @@ template< typename Expr >
 ScalarUnaryOp< Expr, UnaryMultiplyOp > operator*(
     const ScalarBase< Expr >& expr, double multiplier )
 {
-    return ScalarUnaryOp< Expr, UnaryMultiplyOp >(
-        static_cast< const Expr& >( expr ), UnaryMultiplyOp( multiplier ) );
+    return ScalarUnaryOp< Expr, UnaryMultiplyOp >{
+        static_cast< const Expr& >( expr ), UnaryMultiplyOp{ multiplier } };
 }
 
 /**

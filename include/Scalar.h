@@ -144,6 +144,16 @@ public:
         return partial_.segment( parameterMap_.at( p ), p->dim() );
     }
 
+    PartialSegment at( const Scalar& other ) const
+    {
+        if ( other.size() != 1 )
+        {
+            throw std::runtime_error( "Error! Scalar needs to have exactly one parameter to be "
+                                      "able to retrieve partial with respect to" );
+        }
+        return at( other.parameters().front() );
+    }
+
     /**
      *  @copydoc ScalarBase::accum()
      */

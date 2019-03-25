@@ -7,6 +7,7 @@
 #include "ScalarUnaryOp.h"
 #include "UnaryNegateOp.h"
 #include "UnaryAdditionOp.h"
+#include "UnarySubtractionOp.h"
 #include "UnaryMultiplyOp.h"
 #include "UnaryMathOp.h"
 #include "ScalarBinaryOp.h"
