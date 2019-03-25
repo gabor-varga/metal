@@ -15,7 +15,7 @@ rule unit_test
     command = clang++ $flags $test_links $in -o $build_directory/tests/unit/$out
 
 rule perf_test
-    command = clang++ -O2 $flags $test_links $in -o $build_directory/tests/perf/$out
+    command = clang++ -O2 $flags $in -o $build_directory/tests/perf/$out
 
 rule doc
     command = doxygen $doc_directory/config

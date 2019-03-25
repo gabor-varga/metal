@@ -37,8 +37,8 @@
 
 # Build directory
 build/examples/*
-build/test/unit/*
-build/test/perf/*
+build/tests/unit/*
+build/tests/perf/*
 !build/examples/.gitkeep
 !build/tests/*/.gitkeep
 
