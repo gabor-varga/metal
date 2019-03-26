@@ -48,3 +48,6 @@ build.sh
 
 # Doc html output directory
 doc/html
+doc/xml
+doc/build
+doc/source
