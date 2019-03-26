@@ -144,6 +144,17 @@ public:
         return partial_.segment( parameterMap_.at( p ), p->dim() );
     }
 
+    /**
+     * @brief Returns the part of the partial derivative vector that refers to the specified
+     * parameter.
+     *
+     * @throws std::runtime_error
+     *
+     * @param other Other scalar object to get partial derivative with respect to
+     * @return PartialSegment Partial derivative vector
+     * 
+     * @see contains
+     */
     PartialSegment at( const Scalar& other ) const
     {
         if ( other.size() != 1 )
