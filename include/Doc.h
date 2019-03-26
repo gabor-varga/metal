@@ -1,4 +1,4 @@
-/*! \mainpage My Personal Index Page
+/*! \mainpage METAL Main Page
  *
  * \section intro_sec Introduction
  *
