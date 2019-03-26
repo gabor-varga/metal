@@ -142,7 +142,7 @@ public:
      * @throws std::runtime_error
      *
      * @param p Parameter to get partial derivative of
-     * @return auto Partial derivative vector
+     * @return PartialSegmentType Partial derivative vector
      * 
      * @see contains
      */
