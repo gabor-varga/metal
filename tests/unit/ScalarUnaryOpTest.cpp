@@ -87,6 +87,66 @@ TEST_CASE( "Unary subtraction operator", "[scalar_unary_sub]" )
 }
 
 
+TEST_CASE( "Unary multiplication operator", "[scalar_unary_mul]" )
+{
+    SECTION( "Multiplication without partials" )
+    {
+        const Scalar x{ 1.5 };
+        
+        const auto y = x * 3.0;
+        REQUIRE_VALUE_EQUAL( y, 4.5 );
+        REQUIRE_PARTIALS_EMPTY( y );
+
+        const auto z = 3.0 * x;
+        REQUIRE_VALUE_EQUAL( z, 4.5 );
+        REQUIRE_PARTIALS_EMPTY( z );
+    }
+
+    SECTION( "Multiplication with partials" )
+    {
+        const Scalar x{ 1.5, "x" };
+        
+        const auto y = x * 3.0;
+        REQUIRE_VALUE_EQUAL( y, 4.5 );
+        REQUIRE_PARTIALS_EQUAL( y, 3.0 );
+
+        const auto z = 3.0 * x;
+        REQUIRE_VALUE_EQUAL( z, 4.5 );
+        REQUIRE_PARTIALS_EQUAL( z, 3.0 );
+    }
+}
+
+
+TEST_CASE( "Unary division operator", "[scalar_unary_div]" )
+{
+    SECTION( "Division without partials" )
+    {
+        const Scalar x{ 1.5 };
+        
+        const auto y = x / 3.0;
+        REQUIRE_VALUE_EQUAL( y, 0.5 );
+        REQUIRE_PARTIALS_EMPTY( y );
+
+        const auto z = 3.0 / x;
+        REQUIRE_VALUE_EQUAL( z, 2.0 );
+        REQUIRE_PARTIALS_EMPTY( z );
+    }
+
+    SECTION( "Division with partials" )
+    {
+        const Scalar x{ 1.5, "x" };
+        
+        const auto y = x / 3.0;
+        REQUIRE_VALUE_EQUAL( y, 0.5 );
+        REQUIRE_PARTIALS_EQUAL( y, 1.0 / 3.0 );
+
+        const auto z = 3.0 / x;
+        REQUIRE_VALUE_EQUAL( z, 2.0 );
+        REQUIRE_PARTIALS_EQUAL( z, 1.0 / 1.5 );
+    }
+}
+
+
 TEST_CASE( "Unary math operations can be applied on scalars", "[scalar_unary_sine]" )
 {
     SECTION( "Sine without partials" )

@@ -9,6 +9,7 @@
 #include "UnaryAdditionOp.h"
 #include "UnarySubtractionOp.h"
 #include "UnaryMultiplyOp.h"
+#include "UnaryDivisionOp.h"
 #include "UnaryMathOp.h"
 #include "ScalarBinaryOp.h"
 #include "BinaryAdditionOp.h"

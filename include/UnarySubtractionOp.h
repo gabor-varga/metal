@@ -15,8 +15,8 @@ enum class SubtractMode
 };
 
 /**
- * @brief Unary operation taken by \ref ScalarUnaryOp object to define the expression for adding
- * an expression and to a floating point number.
+ * @brief Unary operation taken by \ref ScalarUnaryOp object to define the expression for
+ * subtracting an expression from a floating point number and vice-versa.
  */
 template< SubtractMode Flag >
 class UnarySubtractionOp
@@ -24,7 +24,8 @@ class UnarySubtractionOp
 
 public:
     /**
-     * @brief Construct a new Unary Addition Op object with a scalar to add to an expression.
+     * @brief Construct a new Unary Subtraction Op object with a scalar to subtract from an
+     * expression or to subtract the expression from. This depends on the SubtractMode flag.
      *
      * @param scalar Addend
      */
@@ -55,7 +56,7 @@ public:
     }
 
 private:
-    /** Scalar to be added to the expression */
+    /** Scalar to be subtracted from the expression or to be the subtrahend */
     double scalar_;
 };
 
