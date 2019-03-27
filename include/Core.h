@@ -13,7 +13,9 @@
 #include "UnaryMathOp.h"
 #include "ScalarBinaryOp.h"
 #include "BinaryAdditionOp.h"
+#include "BinarySubtractionOp.h"
 #include "BinaryMultiplyOp.h"
+#include "BinaryDivisionOp.h"
 
 
 #endif // METAL_CORE_H
