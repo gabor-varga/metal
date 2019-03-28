@@ -53,7 +53,7 @@ public:
      */
     double partial( double value ) const
     {
-        return ( Flag == DivisionMode::Normal ) ? 1.0 / scalar_ : 1.0 / value;
+        return ( Flag == DivisionMode::Normal ) ? 1.0 / scalar_ : -scalar_ / ( value * value );
     }
 
 private:

@@ -53,22 +53,34 @@ inline void REQUIRE_PARTIALS_EQUAL( const metal::ScalarBase< Expr >& x, double v
     REQUIRE( x.at( p ) == partial );
 }
 
-template< typename Func >
-inline void testPartial( Func func, double x, double eps = 1e-6, double tol = 1e-6 )
+
+template< typename Func, typename SFunc >
+inline void test( Func func, SFunc sfunc, double x, double eps = 1e-6, double tol = 1e-6 )
 {
+    {
+        metal::Scalar s{ x };
+        REQUIRE_PARTIALS_EMPTY( s );
+        const auto y = sfunc( s );
+        REQUIRE( almostEqual( func( x ), y.value() ) );
+        REQUIRE_PARTIALS_EMPTY( y );
+    }
+
     metal::Scalar s{ x, "x" };
+    REQUIRE( almostEqual( func( x ), sfunc( s ).value() ) );
+
     const auto p = s.parameters().front();
 
-    const double f1 = func( s + eps ).value();
-    const double f2 = func( s - eps ).value();
+    const double f1 = func( x + eps );
+    const double f2 = func( x - eps );
     const double numeric = ( f1 - f2 ) / ( 2 * eps );
-    const double analytic = func( s ).at( p )[0];
+    const double analytic = sfunc( s ).at( p )[0];
 
-    if ( ! almostEqual( numeric, analytic, tol ) )
+    if ( !almostEqual( numeric, analytic, tol ) )
     {
         std::cout << "x: " << x << std::endl;
         std::cout << "f1: " << f1 << std::endl;
         std::cout << "f2: " << f2 << std::endl;
+        std::cout << "f1 - f2: " << f1 - f2 << std::endl;
         std::cout << "numeric: " << numeric << std::endl;
         std::cout << "analytic: " << analytic << std::endl;
         std::cout << "numeric - analytic: " << numeric - analytic << std::endl;
@@ -78,13 +90,59 @@ inline void testPartial( Func func, double x, double eps = 1e-6, double tol = 1e
     REQUIRE( almostEqual( numeric, analytic, tol ) );
 }
 
-template< typename Func >
-inline void testPartial( Func func, const Vector& vec, double eps = 1e-6, double tol = 1e-6 )
+template< typename Func, typename SFunc >
+inline void test( Func func, SFunc sfunc, const Vector& vec, double eps = 1e-6, double tol = 1e-6 )
 {
     for ( const auto& x : vec )
     {
-        testPartial( func, x, eps, tol );
+        test( func, sfunc, x, eps, tol );
     }
 }
+
+
+#define TEST_SCALAR( NAME, TAG, FUNC, START, END, NUM )                                            \
+    TEST_CASE( NAME, TAG )                                                                         \
+    {                                                                                              \
+        const auto f = []( double x ) { return FUNC( x ); };                                       \
+        const auto sf = []( const metal::Scalar& x ) { return FUNC( x ); };                               \
+        const auto vec = generate( START, END, NUM );                                              \
+        test( f, sf, vec );                                                                        \
+    }
+
+double negate( double x );
+metal::ScalarUnaryOp< metal::Scalar, metal::UnaryNegateOp >
+negate( const metal::Scalar& x );
+
+double add1( double x );
+metal::ScalarUnaryOp< metal::Scalar, metal::UnaryAdditionOp >
+add1( const metal::Scalar& x );
+
+double add2( double x );
+metal::ScalarUnaryOp< metal::Scalar, metal::UnaryAdditionOp >
+add2( const metal::Scalar& x );
+
+double sub1( double x );
+metal::ScalarUnaryOp< metal::Scalar, metal::UnarySubtractionOp< metal::SubtractMode::Normal > >
+sub1( const metal::Scalar& x );
+
+double sub2( double x );
+metal::ScalarUnaryOp< metal::Scalar, metal::UnarySubtractionOp< metal::SubtractMode::Reverse > >
+sub2( const metal::Scalar& x );
+
+double mul1( double x );
+metal::ScalarUnaryOp< metal::Scalar, metal::UnaryMultiplyOp >
+mul1( const metal::Scalar& x );
+
+double mul2( double x );
+metal::ScalarUnaryOp< metal::Scalar, metal::UnaryMultiplyOp >
+mul2( const metal::Scalar& x );
+
+double div1( double x );
+metal::ScalarUnaryOp< metal::Scalar, metal::UnaryDivisionOp< metal::DivisionMode::Normal > >
+div1( const metal::Scalar& x );
+
+double div2( double x );
+metal::ScalarUnaryOp< metal::Scalar, metal::UnaryDivisionOp< metal::DivisionMode::Reverse > >
+div2( const metal::Scalar& x );
 
 #endif // METAL_TEST_SUITE
