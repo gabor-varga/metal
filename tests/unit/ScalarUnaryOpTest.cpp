@@ -145,25 +145,3 @@ TEST_CASE( "Unary division operator", "[scalar_unary_div]" )
         REQUIRE_PARTIALS_EQUAL( z, 1.0 / 1.5 );
     }
 }
-
-
-TEST_CASE( "Unary math operations can be applied on scalars", "[scalar_unary_sine]" )
-{
-    SECTION( "Sine without partials" )
-    {
-        const Scalar x{ 2.0 };
-        const auto y = sin( x );
-
-        REQUIRE_VALUE_EQUAL( y, sin( 2.0 ) );
-        REQUIRE_PARTIALS_EMPTY( y );
-    }
-
-    SECTION( "Sine with partials" )
-    {
-        const Scalar x{ 2.0, "x" };
-        const auto y = sin( x );
-
-        REQUIRE_VALUE_EQUAL( y, sin( 2.0 ) );
-        REQUIRE_PARTIALS_EQUAL( y, cos( 2.0 ) );
-    }
-}
