@@ -25,5 +25,6 @@ build example: example Example.cpp
 build test_config: testConfig
 build test_scalar: unit_test tests/unit/ScalarTest.cpp | test_config
 build test_unary_op: unit_test tests/unit/ScalarUnaryOpTest.cpp | test_config
+build test_unary_math_op: unit_test tests/unit/ScalarUnaryMathOpTest.cpp | test_config
 build test_perf: perf_test tests/perf/PerfTest.cpp
 build Doc: doc
