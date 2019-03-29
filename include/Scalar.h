@@ -42,19 +42,25 @@ public:
     {
     }
 
+    Scalar( double value, ParameterPtr param, const Partial& partial )
+        : value_{ value }
+        , partial_{ partial }
+        , parameterMap_{ { param, 0 } }
+    {
+    }
+
     /**
      * @brief Construct a new Scalar object and creates a parameter with the specified name.
      *
      * The partial derivative w.r.t. this parameter is initialized to unity.
      *
-     * @param value Value of the scalar object
-     * @param name Name of the internal parameter
+     * @param value Value of the scalar
+     * @param name Name of the parameter
      */
-    template< typename T = NamedParameter >
     Scalar( double value, const std::string& name )
         : value_{ value }
         , partial_{ Eigen::Matrix< double, 1, 1 >::Ones() }
-        , parameterMap_{ { { std::make_shared< T >( 1, name ), 0 } } }
+        , parameterMap_{ { { std::make_shared< NamedParameter >( 1, name ), 0 } } }
     {
     }
 
@@ -152,7 +158,7 @@ public:
      *
      * @param other Other scalar object to get partial derivative with respect to
      * @return PartialSegment Partial derivative vector
-     * 
+     *
      * @see contains
      */
     PartialSegment at( const Scalar& other ) const
