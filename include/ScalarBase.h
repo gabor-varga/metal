@@ -4,6 +4,7 @@
 
 #include "Parameter.h"
 #include <exception>
+#include <iomanip>
 #include <iostream>
 
 #ifdef __clang__
@@ -127,7 +128,7 @@ public:
      * @param p Parameter to check existance of
      * @return true Expression contains partial w.r.t. the parameter
      * @return false Expression does not contains partial w.r.t. the parameter
-     * 
+     *
      * @see at
      */
     bool contains( const ParameterPtr& p ) const
@@ -143,7 +144,7 @@ public:
      *
      * @param p Parameter to get partial derivative of
      * @return PartialSegmentType Partial derivative vector
-     * 
+     *
      * @see contains
      */
     PartialSegmentType at( const ParameterPtr& p ) const
@@ -166,6 +167,70 @@ public:
 };
 
 
+namespace detail
+{
+
+    inline void printHeader( std::ostream& os, const ParameterPtrVector& params, int precision )
+    {
+        const int minWidth = precision + 8;
+
+        os << std::setw( minWidth ) << "Value";
+        for ( const auto& p : params )
+        {
+            const auto& name = p->name();
+            const int pad = p->dim() == 1 ? 1 : 4;
+            const int width = std::max( minWidth, static_cast< int >( name.size() ) + pad );
+
+            os << " |";
+            if ( p->dim() == 1 )
+            {
+                os << std::setw( width ) << name;
+            }
+            else
+            {
+                for ( int k = 0; k < p->dim(); k++ )
+                {
+                    const std::string nameWithIndex = name + "[" + std::to_string( k ) + "]";
+                    os << std::setw( width ) << nameWithIndex;
+                }
+            }
+        }
+        os << std::endl;
+    }
+
+    template< typename Expr >
+    void printValue( std::ostream& os, const ScalarBase< Expr >& expr, int precision )
+    {
+        const int minWidth = precision + 8;
+
+        os << std::setw( minWidth ) << std::scientific << std::setprecision( precision )
+           << expr.value();
+        for ( const auto& p : expr.parameters() )
+        {
+            const int pad = p->dim() == 1 ? 1 : 4;
+            const int width = std::max( minWidth, static_cast< int >( p->name().size() ) + pad );
+
+            if ( expr.contains( p ) )
+            {
+                const auto partial = expr.at( p );
+                os << " |";
+                for ( int j = 0; j < partial.size(); j++ )
+                    os << std::setw( width ) << std::scientific << std::setprecision( precision )
+                       << partial[j];
+            }
+            else
+            {
+                os << " |";
+                os << std::scientific << std::setprecision( precision )
+                   << std::setw( width * p->dim() ) << "";
+            }
+        }
+        os << std::endl;
+    }
+
+} // detail
+
+
 /**
  * @brief Generic output stream function for any \ref ScalarBase types.
  *
@@ -177,13 +242,9 @@ public:
 template< typename Expr >
 std::ostream& operator<<( std::ostream& os, const ScalarBase< Expr >& expr )
 {
-    os << expr.value();
-    os << " ( ";
-    for ( const auto& entry : expr.parameters() )
-    {
-        os << entry->name() << ": " << expr.at( entry ) << " ";
-    }
-    os << ")";
+    const int prec = static_cast< int >( os.precision() );
+    detail::printHeader( os, expr.parameters(), prec );
+    detail::printValue( os, expr, prec );
     return os;
 }
 

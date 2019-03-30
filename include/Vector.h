@@ -90,17 +90,49 @@ struct ScalarBinaryOpTraits< double, metal::Scalar, BinaryOp >
 namespace metal
 {
 
+/** Type alias for NxM matrix */
 template< int Rows, int Cols >
 using MatrixT = Eigen::Matrix< metal::Scalar, Rows, Cols >;
 
-using Vector = MatrixT< -1, 1 >;
-using Vector3 = MatrixT< 3, 1 >;
+/** Type alias for dynamic matrix */
+using Matrix = MatrixT< Eigen::Dynamic, Eigen::Dynamic >;
+
+/** Type alias for 3x3 matrix */
+using Matrix3 = MatrixT< 3, 3 >;
+
+/** Type alias for 6x6 matrix */
+using Matrix6 = MatrixT< 6, 6 >;
+
+/** Type alias for N dimensional vector */
+template< int Rows >
+using VectorT = MatrixT< Rows, 1 >;
+
+/** Type alias for dynamic vector */
+using Vector = VectorT< Eigen::Dynamic >;
+
+/** Type alias for 3 dimensional vector */
+using Vector3 = VectorT< 3 >;
+
+/** Type alias for 6 dimensional vector */
+using Vector6 = VectorT< 6 >;
 
 
-inline Vector create( const Eigen::Matrix< double, -1, 1 >& value, const std::string& name )
+/**
+ * @brief Creates a metal matrix vaiable from an Eigen matrix variable including the partial
+ * derivatives referring to the named parameter created using the provided name.
+ *
+ * @tparam Rows Number of rows of the input/output matrix
+ * @tparam Cols Number of columns of the input/output matrix
+ * @param value Value of the matrix
+ * @param name Name of the parameter to create
+ * @return MatrixT< Rows, Cols > Matrix containing partials
+ */
+template< int Rows, int Cols >
+MatrixT< Rows, Cols > create(
+    const Eigen::Matrix< double, Rows, Cols >& value, const std::string& name )
 {
-    const auto dim = value.size();
-    Vector out{ dim };
+    const int dim = static_cast< int >( value.size() );
+    MatrixT< Rows, Cols > out{ value.rows(), value.cols() };
     const auto partial = Eigen::Matrix< double, -1, -1 >::Identity( dim, dim );
 
     const auto p = std::make_shared< NamedParameter >( dim, name );
@@ -111,11 +143,15 @@ inline Vector create( const Eigen::Matrix< double, -1, 1 >& value, const std::st
     return out;
 }
 
+} // metal
 
-// inline std::ostream& operator<<( std::ostream& os, const Vector& vec )
-inline void print( std::ostream& os, const Vector& vec )
+
+template< typename Derived,
+    typename T = typename std::enable_if<
+        std::is_same< typename Derived::Scalar, metal::Scalar >::value >::type >
+std::ostream& operator<<( std::ostream& os, const Eigen::MatrixBase< Derived >& vec )
 {
-    ParameterPtrVector params;
+    metal::ParameterPtrVector params;
     for ( int i = 0; i < vec.size(); i++ )
     {
         const auto& p = vec[i].parameters();
@@ -124,51 +160,15 @@ inline void print( std::ostream& os, const Vector& vec )
     std::sort( params.begin(), params.end() );
     params.erase( std::unique( params.begin(), params.end() ), params.end() );
 
-    const int maxParamNameWidth = 9;
-    const int pad = 3;
-    const int width = maxParamNameWidth + pad;
-
-    os << std::setw( width ) << "";
-    for ( const auto& p : params )
-    {
-        const auto& name = p->name();
-        if ( p->dim() == 1 )
-        {
-            os << std::setw( width ) << name;
-        }
-        else
-        {
-            for ( int k = 0; k < p->dim(); k++ )
-            {
-                const std::string nameWithIndex = name + std::to_string( k );
-                os << std::setw( width ) << nameWithIndex;
-            }
-        }
-    }
-    os << std::endl;
+    const int prec = static_cast< int >( os.precision() );
+    metal::detail::printHeader( os, params, prec );
 
     for ( int i = 0; i < vec.size(); i++ )
     {
-        os << std::setw( width ) << vec[i].value();
-        for ( const auto& p : params )
-        {
-            if ( vec[i].contains( p ) )
-            {
-                const auto partial = vec[i].at( p );
-                for ( int j = 0; j < partial.size(); j++ )
-                    os << std::setw( width ) << partial[j];
-            }
-            else
-            {
-                os << std::setw( width * p->dim() ) << "";
-            }
-        }
-        os << std::endl;
+        metal::detail::printValue( os, vec[i], prec );
     }
 
-    // return os;
+    return os;
 }
-
-} // metal
 
 #endif // METAL_VECTOR_H
