@@ -23,35 +23,64 @@
 namespace Eigen
 {
 
+/**
+ * @brief This template specialization of the Eigen num traits object is allowing the Scalar object
+ * to be used as the scalar template parameter for Eigen vectors and matrices.
+ */
 template<>
 struct NumTraits< metal::Scalar > : NumTraits< double >
 {
+    /** Alias for real type */
     using Real = metal::Scalar;
+
+    /** Alias for non-integer type */
     using NonInteger = metal::Scalar;
+
+    /** Alias for nested type */
     using Nested = metal::Scalar;
+
+    /** Alias for literal type */
     using Literal = double;
 
+    /**
+     * @brief Enum fo further settings
+     *
+     */
     enum
     {
-        IsComplex = 0,
-        IsInteger = 0,
-        IsSigned = 1,
-        RequireInitialization = 1,
-        ReadCost = 1,
-        AddCost = 3,
-        MulCost = 3
+        IsComplex = 0, /** It is not complex */
+        IsInteger = 0, /** It is not an integer */
+        IsSigned = 1, /** It is signed*/
+        RequireInitialization = 1, /** It does require initialization (construction)*/
+        ReadCost = 1, /** It has normal read cost */
+        AddCost = 3, /** It has higher addition cost */
+        MulCost = 3 /** It has higher multiplication cost */
     };
 };
 
+/**
+ * @brief Template specialization for determining the result type of a binary operation between
+ * Scalar object and a floating point number. It is defined for any kind of binary operation.
+ *
+ * @tparam BinaryOp Type of the binary operation
+ */
 template< typename BinaryOp >
 struct ScalarBinaryOpTraits< metal::Scalar, double, BinaryOp >
 {
+    /** Alias for return type */
     using ReturnType = metal::Scalar;
 };
 
+/**
+ * @brief Template specialization for determining the result type of a binary operation between
+ * floating point number and a Scalar object. It is defined for any kind of binary operation.
+ *
+ * @tparam BinaryOp Type of the binary operation
+ */
 template< typename BinaryOp >
 struct ScalarBinaryOpTraits< double, metal::Scalar, BinaryOp >
 {
+    /** Alias for return type */
     using ReturnType = metal::Scalar;
 };
 
