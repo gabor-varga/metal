@@ -1,5 +1,5 @@
-#ifndef METAL_VECTOR_H
-#define METAL_VECTOR_H
+#ifndef METAL_MATRIX_H
+#define METAL_MATRIX_H
 
 
 #include "Core.h"
@@ -171,4 +171,4 @@ std::ostream& operator<<( std::ostream& os, const Eigen::MatrixBase< Derived >& 
     return os;
 }
 
-#endif // METAL_VECTOR_H
+#endif // METAL_MATRIX_H
