@@ -2,28 +2,31 @@ src_directory = src
 build_directory = build
 doc_directory = doc
 
+compiler = clang++
 flags = -g -std=c++11 -Weverything -Wno-c++98-compat -Wno-padded -fcomment-block-commands=copydoc -I./include -I/usr/include/eigen3
+# flags = -g -std=c++11 -Wall -Wextra -I./include -I/usr/include/eigen3
 test_links = -L./build/tests/unit -Wl,-rpath=build/tests/unit -lcatch
 
 rule example
-    command = clang++ $flags $in -o $build_directory/examples/$out
+    command = $compiler $flags $in -o $build_directory/examples/$out
 
 rule testConfig
-    command = clang++ -std=c++11 -fPIC -shared tests/unit/catch.cpp -o $build_directory/tests/unit/libcatch.so
+    command = echo
+    #command = $compiler -std=c++11 -fPIC -shared tests/unit/catch.cpp -o $build_directory/tests/unit/libcatch.so
 
 rule unit_test
-    command = clang++ $flags $test_links $in -o $build_directory/tests/unit/$out
+    command = $compiler $flags $test_links $in -o $build_directory/tests/unit/$out
 
 rule perf_test
-    command = clang++ -O2 $flags $in -o $build_directory/tests/perf/$out
+    command = $compiler -O2 $flags $in -o $build_directory/tests/perf/$out
 
 rule doc
     command = doxygen $doc_directory/config
 
 
-build example: example Example.cpp
+build scalar_example: example examples/ScalarExample.cpp
 build test_config: testConfig
 build test_scalar: unit_test tests/unit/ScalarTest.cpp | test_config
 build test_unary_op: unit_test tests/unit/ScalarUnaryOpTest.cpp | test_config
 build test_perf: perf_test tests/perf/PerfTest.cpp
-build Doc: doc
+#build Doc: doc

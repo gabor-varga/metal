@@ -25,18 +25,21 @@ int main()
     Eigen::IOFormat MyFormat{ Eigen::StreamPrecision, Eigen::DontAlignCols, " ", "\n", "", "", "", "" };
 
 
-    const auto s = metal::create( v, "s" );
-    std::cout << s.format( MyFormat ) << std::endl;
+    const metal::Vector s = metal::create( v, "s" );
+    std::cout << s << std::endl;
+    print( std::cout, s );
 
-    const auto r = metal::create( u, "r" );
-    std::cout << r.format( MyFormat ) << std::endl;
+    const metal::Vector r = metal::create( u, "r" );
+    // std::cout << r.format( MyFormat ) << std::endl;
+    print( std::cout, r );
 
-    const auto d = s.dot( r );
+    const metal::Scalar d = s.dot( r );
     std::cout << d << std::endl;
 
-    // const auto cr = metal::Vector3{ s }.cross( v );
-    const auto cr = metal::Vector3{ s }.cross( metal::Vector3{ r } );
-    std::cout << cr.format( MyFormat ) << std::endl;
+    // const metal::Vector cr = metal::Vector3{ s }.cross( v );
+    const metal::Vector cr = metal::Vector3{ s }.cross( metal::Vector3{ r } );
+    // std::cout << cr.format( MyFormat ) << std::endl;
+    print( std::cout, cr );
 
     // Eigen::cross( s, v );
 

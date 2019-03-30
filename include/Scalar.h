@@ -42,6 +42,14 @@ public:
     {
     }
 
+    /**
+     * @brief Construct a new Scalar object using a specific parameter object and the given partial
+     * vector w.r.t. that parameter.
+     *
+     * @param value Valueof the scalar object
+     * @param param Parameter to be stored
+     * @param partial Partial derivative vector with respect to the parameter
+     */
     Scalar( double value, ParameterPtr param, const Partial& partial )
         : value_{ value }
         , partial_{ partial }

@@ -3,6 +3,7 @@
 
 
 #include "Core.h"
+#include <iomanip>
 
 #ifdef __clang__
 #pragma clang diagnostic push
@@ -79,6 +80,64 @@ inline Vector create( const Eigen::Matrix< double, -1, 1 >& value, const std::st
         out[i] = metal::Scalar{ value[i], p, partial.row( i ) };
     }
     return out;
+}
+
+
+// inline std::ostream& operator<<( std::ostream& os, const Vector& vec )
+inline void print( std::ostream& os, const Vector& vec )
+{
+    ParameterPtrVector params;
+    for ( int i = 0; i < vec.size(); i++ )
+    {
+        const auto& p = vec[i].parameters();
+        params.insert( params.end(), p.begin(), p.end() );
+    }
+    std::sort( params.begin(), params.end() );
+    params.erase( std::unique( params.begin(), params.end() ), params.end() );
+
+    const int maxParamNameWidth = 9;
+    const int pad = 3;
+    const int width = maxParamNameWidth + pad;
+
+    os << std::setw( width ) << "";
+    for ( const auto& p : params )
+    {
+        const auto& name = p->name();
+        if ( p->dim() == 1 )
+        {
+            os << std::setw( width ) << name;
+        }
+        else
+        {
+            for ( int k = 0; k < p->dim(); k++ )
+            {
+                const std::string nameWithIndex = name + std::to_string( k );
+                os << std::setw( width ) << nameWithIndex;
+            }
+        }
+    }
+    os << std::endl;
+
+    for ( int i = 0; i < vec.size(); i++ )
+    {
+        os << std::setw( width ) << vec[i].value();
+        for ( const auto& p : params )
+        {
+            if ( vec[i].contains( p ) )
+            {
+                const auto partial = vec[i].at( p );
+                for ( int j = 0; j < partial.size(); j++ )
+                    os << std::setw( width ) << partial[j];
+            }
+            else
+            {
+                os << std::setw( width * p->dim() ) << "";
+            }
+        }
+        os << std::endl;
+    }
+
+    // return os;
 }
 
 } // metal
