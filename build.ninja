@@ -13,7 +13,8 @@ rule example
     command = $compiler $flags $in -o $build_directory/examples/$out
 
 rule testConfig
-    command = $compiler -std=c++11 -fPIC -shared tests/unit/catch.cpp -o $build_directory/tests/unit/libcatch.so
+    command = echo
+    #command = $compiler -std=c++11 -fPIC -shared tests/unit/catch.cpp -o $build_directory/tests/unit/libcatch.so
 
 rule unit_test
     command = $compiler $flags -Wno-global-constructors $test_links $in -o $build_directory/tests/unit/$out
@@ -31,4 +32,4 @@ build test_scalar: unit_test tests/unit/ScalarTest.cpp | test_config
 build test_unary_op: unit_test tests/unit/ScalarUnaryOpTest.cpp | test_config
 build test_binary_op: unit_test tests/unit/ScalarBinaryOpTest.cpp | test_config
 build test_perf: perf_test tests/perf/PerfTest.cpp
-build Doc: doc
+#build Doc: doc
