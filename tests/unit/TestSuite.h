@@ -36,9 +36,10 @@ private:
 std::default_random_engine Random::engine{};
 
 
-inline bool almostEqual( double left, double right, double tol = 0.0 )
+inline bool almostEqual( double left, double right, double rtol = 0.0, double atol = 0.0 )
 {
-    return std::fabs( left - right ) <= tol;
+    return std::fabs( left - right )
+        <= rtol * std::max( std::fabs( left ), std::fabs( right ) ) + atol;
 }
 
 inline Vector generate( double start, double end, unsigned num )
@@ -79,7 +80,8 @@ inline void REQUIRE_PARTIALS_EQUAL( const metal::ScalarBase< Expr >& x, double v
 
 
 template< typename Func, typename SFunc >
-inline void testUnary( Func func, SFunc sfunc, double x, double eps = 1e-6, double tol = 1e-6 )
+inline void testUnary(
+    Func func, SFunc sfunc, double x, double eps = 1e-6, double rtol = 1e-6, double atol = 1e-9 )
 {
     {
         metal::Scalar s{ x };
@@ -99,7 +101,7 @@ inline void testUnary( Func func, SFunc sfunc, double x, double eps = 1e-6, doub
     const double numeric = ( f1 - f2 ) / ( 2 * eps );
     const double analytic = sfunc( s ).at( p )[0];
 
-    if ( !almostEqual( numeric, analytic, tol ) )
+    if ( !almostEqual( numeric, analytic, rtol, atol ) )
     {
         std::cout << "x: " << x << std::endl;
         std::cout << "f1: " << f1 << std::endl;
@@ -107,42 +109,46 @@ inline void testUnary( Func func, SFunc sfunc, double x, double eps = 1e-6, doub
         std::cout << "numeric: " << numeric << std::endl;
         std::cout << "analytic: " << analytic << std::endl;
         std::cout << "numeric - analytic: " << numeric - analytic << std::endl;
-        std::cout << "tol: " << tol << std::endl;
+        std::cout << "rtol: " << rtol << std::endl;
+        std::cout << "atol: " << atol << std::endl;
+        std::cout << "tol: "
+                  << rtol * std::max( std::fabs( numeric ), std::fabs( analytic ) ) + atol
+                  << std::endl;
     }
 
-    REQUIRE( almostEqual( numeric, analytic, tol ) );
+    REQUIRE( almostEqual( numeric, analytic, rtol, atol ) );
 }
 
 template< typename Func, typename SFunc >
-inline void testUnary(
-    Func func, SFunc sfunc, const Vector& vec, double eps = 1e-6, double tol = 1e-6 )
+inline void testUnary( Func func, SFunc sfunc, const Vector& vec, double eps = 1e-6,
+    double rtol = 1e-6, double atol = 1e-9 )
 {
     for ( const auto& x : vec )
     {
-        testUnary( func, sfunc, x, eps, tol );
+        testUnary( func, sfunc, x, eps, rtol, atol );
     }
 }
 
 template< typename Func, typename SFunc >
-inline void testBinary(
-    Func func, SFunc sfunc, double x, double y, double eps = 1e-6, double tol = 1e-6 )
+inline void testBinary( Func func, SFunc sfunc, double x, double y, double eps = 1e-6,
+    double rtol = 1e-6, double atol = 1e-9 )
 {
     const auto func1 = [&]( double x_ ) { return func( x_, y ); };
     const auto sfunc1 = [&]( const metal::Scalar& x_ ) { return sfunc( x_, metal::Scalar{ y } ); };
-    testUnary( func1, sfunc1, x, eps, tol );
+    testUnary( func1, sfunc1, x, eps, rtol, atol );
 
     const auto func2 = [&]( double y_ ) { return func( x, y_ ); };
     const auto sfunc2 = [&]( const metal::Scalar& y_ ) { return sfunc( metal::Scalar{ x }, y_ ); };
-    testUnary( func2, sfunc2, x, eps, tol );
+    testUnary( func2, sfunc2, x, eps, rtol, atol );
 }
 
 template< typename Func, typename SFunc >
-inline void testBinary(
-    Func func, SFunc sfunc, const PairVector& vec, double eps = 1e-6, double tol = 1e-6 )
+inline void testBinary( Func func, SFunc sfunc, const PairVector& vec, double eps = 1e-6,
+    double rtol = 1e-6, double atol = 1e-9 )
 {
     for ( const auto& entry : vec )
     {
-        testBinary( func, sfunc, entry.first, entry.second, eps, tol );
+        testBinary( func, sfunc, entry.first, entry.second, eps, rtol, atol );
     }
 }
 
