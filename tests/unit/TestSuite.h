@@ -4,12 +4,36 @@
 
 #include "Core.h"
 #include "catch.hpp"
+#include <random>
 
 
 constexpr double Pi = 3.141592653589793;
 
-
 using Vector = std::vector< double >;
+using PairVector = std::vector< std::pair< double, double > >;
+
+
+class Random
+{
+public:
+    static double generate( double start, double end )
+    {
+        std::uniform_real_distribution< double > distribution( start, end );
+        return distribution( engine );
+    }
+
+    static Vector generate( double start, double end, int num )
+    {
+        Vector out( static_cast< size_t >( num ) );
+        std::generate( out.begin(), out.end(), [=]() { return generate( start, end ); } );
+        return out;
+    }
+
+private:
+    static std::default_random_engine engine;
+};
+
+std::default_random_engine Random::engine{};
 
 
 inline bool almostEqual( double left, double right, double tol = 0.0 )
@@ -55,7 +79,7 @@ inline void REQUIRE_PARTIALS_EQUAL( const metal::ScalarBase< Expr >& x, double v
 
 
 template< typename Func, typename SFunc >
-inline void test( Func func, SFunc sfunc, double x, double eps = 1e-6, double tol = 1e-6 )
+inline void testUnary( Func func, SFunc sfunc, double x, double eps = 1e-6, double tol = 1e-6 )
 {
     {
         metal::Scalar s{ x };
@@ -80,7 +104,6 @@ inline void test( Func func, SFunc sfunc, double x, double eps = 1e-6, double to
         std::cout << "x: " << x << std::endl;
         std::cout << "f1: " << f1 << std::endl;
         std::cout << "f2: " << f2 << std::endl;
-        std::cout << "f1 - f2: " << f1 - f2 << std::endl;
         std::cout << "numeric: " << numeric << std::endl;
         std::cout << "analytic: " << analytic << std::endl;
         std::cout << "numeric - analytic: " << numeric - analytic << std::endl;
@@ -91,58 +114,63 @@ inline void test( Func func, SFunc sfunc, double x, double eps = 1e-6, double to
 }
 
 template< typename Func, typename SFunc >
-inline void test( Func func, SFunc sfunc, const Vector& vec, double eps = 1e-6, double tol = 1e-6 )
+inline void testUnary(
+    Func func, SFunc sfunc, const Vector& vec, double eps = 1e-6, double tol = 1e-6 )
 {
     for ( const auto& x : vec )
     {
-        test( func, sfunc, x, eps, tol );
+        testUnary( func, sfunc, x, eps, tol );
+    }
+}
+
+template< typename Func, typename SFunc >
+inline void testBinary(
+    Func func, SFunc sfunc, double x, double y, double eps = 1e-6, double tol = 1e-6 )
+{
+    const auto func1 = [&]( double x_ ) { return func( x_, y ); };
+    const auto sfunc1 = [&]( const metal::Scalar& x_ ) { return sfunc( x_, metal::Scalar{ y } ); };
+    testUnary( func1, sfunc1, x, eps, tol );
+
+    const auto func2 = [&]( double y_ ) { return func( x, y_ ); };
+    const auto sfunc2 = [&]( const metal::Scalar& y_ ) { return sfunc( metal::Scalar{ x }, y_ ); };
+    testUnary( func2, sfunc2, x, eps, tol );
+}
+
+template< typename Func, typename SFunc >
+inline void testBinary(
+    Func func, SFunc sfunc, const PairVector& vec, double eps = 1e-6, double tol = 1e-6 )
+{
+    for ( const auto& entry : vec )
+    {
+        testBinary( func, sfunc, entry.first, entry.second, eps, tol );
     }
 }
 
 
-#define TEST_SCALAR( NAME, TAG, FUNC, START, END, NUM )                                            \
+#define TEST_SCALAR_UNARY( NAME, TAG, FUNC, START, END, NUM )                                      \
     TEST_CASE( NAME, TAG )                                                                         \
     {                                                                                              \
         const auto f = []( double x ) { return FUNC( x ); };                                       \
-        const auto sf = []( const metal::Scalar& x ) { return FUNC( x ); };                               \
-        const auto vec = generate( START, END, NUM );                                              \
-        test( f, sf, vec );                                                                        \
+        const auto sf = []( const metal::Scalar& x ) { return FUNC( x ); };                        \
+        const auto vec = Random::generate( START, END, NUM );                                      \
+        testUnary( f, sf, vec );                                                                   \
     }
 
-double negate( double x );
-metal::ScalarUnaryOp< metal::Scalar, metal::UnaryNegateOp >
-negate( const metal::Scalar& x );
 
-double add1( double x );
-metal::ScalarUnaryOp< metal::Scalar, metal::UnaryAdditionOp >
-add1( const metal::Scalar& x );
-
-double add2( double x );
-metal::ScalarUnaryOp< metal::Scalar, metal::UnaryAdditionOp >
-add2( const metal::Scalar& x );
-
-double sub1( double x );
-metal::ScalarUnaryOp< metal::Scalar, metal::UnarySubtractionOp< metal::SubtractMode::Normal > >
-sub1( const metal::Scalar& x );
-
-double sub2( double x );
-metal::ScalarUnaryOp< metal::Scalar, metal::UnarySubtractionOp< metal::SubtractMode::Reverse > >
-sub2( const metal::Scalar& x );
-
-double mul1( double x );
-metal::ScalarUnaryOp< metal::Scalar, metal::UnaryMultiplyOp >
-mul1( const metal::Scalar& x );
-
-double mul2( double x );
-metal::ScalarUnaryOp< metal::Scalar, metal::UnaryMultiplyOp >
-mul2( const metal::Scalar& x );
-
-double div1( double x );
-metal::ScalarUnaryOp< metal::Scalar, metal::UnaryDivisionOp< metal::DivisionMode::Normal > >
-div1( const metal::Scalar& x );
-
-double div2( double x );
-metal::ScalarUnaryOp< metal::Scalar, metal::UnaryDivisionOp< metal::DivisionMode::Reverse > >
-div2( const metal::Scalar& x );
+#define TEST_SCALAR_BINARY( NAME, TAG, FUNC, START1, END1, START2, END2, NUM )                     \
+    TEST_CASE( NAME, TAG )                                                                         \
+    {                                                                                              \
+        const auto f = []( double x, double y ) { return FUNC( x, y ); };                          \
+        const auto sf                                                                              \
+            = []( const metal::Scalar& x, const metal::Scalar& y ) { return FUNC( x, y ); };       \
+        const auto vec1 = Random::generate( START1, END1, NUM );                                   \
+        const auto vec2 = Random::generate( START2, END2, NUM );                                   \
+        PairVector vec( NUM );                                                                     \
+        for ( size_t i = 0; i < NUM; i++ )                                                         \
+        {                                                                                          \
+            vec[i] = std::make_pair( vec1[i], vec2[i] );                                           \
+        }                                                                                          \
+        testBinary( f, sf, vec );                                                                  \
+    }
 
 #endif // METAL_TEST_SUITE

@@ -44,9 +44,9 @@ public:
      *
      * @return double Partial w.r.t. the RHS
      */
-    double rightPartial( double left, double /*right*/ ) const
+    double rightPartial( double left, double right ) const
     {
-        return left;
+        return -left / ( right * right );
     }
 };
 
