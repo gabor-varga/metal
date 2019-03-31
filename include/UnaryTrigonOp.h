@@ -1,5 +1,5 @@
-#ifndef METAL_UNARYMATHOP_H
-#define METAL_UNARYMATHOP_H
+#ifndef METAL_UNARYTRIGONOP_H
+#define METAL_UNARYTRIGONOP_H
 
 
 #include "ScalarUnaryOp.h"
@@ -283,4 +283,4 @@ ScalarUnaryOp< Expr, TangentHyperOp > tanh( const ScalarBase< Expr >& expr )
 
 } // metal
 
-#endif // METAL_UNARYMATHOP_H
+#endif // METAL_UNARYTRIGONOP_H

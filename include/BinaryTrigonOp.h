@@ -1,5 +1,5 @@
-#ifndef METAL_BINARYMATHOP_H
-#define METAL_BINARYMATHOP_H
+#ifndef METAL_BINARYTRIGONOP_H
+#define METAL_BINARYTRIGONOP_H
 
 
 #include "ScalarBinaryOp.h"
@@ -95,4 +95,4 @@ ScalarBinaryOp< Left, Right, Atan2Op > atan2(
 
 } // metal
 
-#endif // METAL_BINARYMATHOP_H
+#endif // METAL_BINARYTRIGONOP_H
