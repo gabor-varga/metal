@@ -144,6 +144,143 @@ ScalarUnaryOp< Expr, TangentOp > tan( const ScalarBase< Expr >& expr )
     return ScalarUnaryOp< Expr, TangentOp >( static_cast< const Expr& >( expr ), TangentOp{} );
 }
 
+/**
+ * @brief Unary operation taken by \ref ScalarUnaryOp object to define the expression for
+ * computing the sine hyperbolic of an expression.
+ */
+struct SineHyperOp
+{
+    /**
+     * @brief Applies the transformation on the value of an expression.
+     *
+     * @param value Value of the expression
+     * @return double Transformed value
+     */
+    double applyToValue( double value ) const
+    {
+        return std::sinh( value );
+    }
+
+    /**
+     * @brief Computes the partial derivative of the unary operation.
+     *
+     * @return double Partial
+     */
+    double partial( double value ) const
+    {
+        return std::cosh( value );
+    }
+};
+
+
+/**
+ * @brief Sine function that takes an expression and creates a new expression with applied
+ * transformation.
+ *
+ * @tparam Expr Type of the expression
+ * @param expr Expression to apply sine to
+ * @return ScalarUnaryOp< Expr, SineHyperOp > Expression that represents the
+ * sine operation
+ */
+template< typename Expr >
+ScalarUnaryOp< Expr, SineHyperOp > sinh( const ScalarBase< Expr >& expr )
+{
+    return ScalarUnaryOp< Expr, SineHyperOp >( static_cast< const Expr& >( expr ), SineHyperOp{} );
+}
+
+
+/**
+ * @brief Unary operation taken by \ref ScalarUnaryOp object to define the expression for
+ * computing the cosine hyperbolic of an expression.
+ */
+struct CosineHyperOp
+{
+    /**
+     * @brief Applies the transformation on the value of an expression.
+     *
+     * @param value Value of the expression
+     * @return double Transformed value
+     */
+    double applyToValue( double value ) const
+    {
+        return std::cosh( value );
+    }
+
+    /**
+     * @brief Computes the partial derivative of the unary operation.
+     *
+     * @return double Partial
+     */
+    double partial( double value ) const
+    {
+        return std::sinh( value );
+    }
+};
+
+
+/**
+ * @brief Cosine function that takes an expression and creates a new expression with applied
+ * transformation.
+ *
+ * @tparam Expr Type of the expression
+ * @param expr Expression to apply cosine to
+ * @return ScalarUnaryOp< Expr, CosineHyperOp > Expression that represents the
+ * cosine operation
+ */
+template< typename Expr >
+ScalarUnaryOp< Expr, CosineHyperOp > cosh( const ScalarBase< Expr >& expr )
+{
+    return ScalarUnaryOp< Expr, CosineHyperOp >(
+        static_cast< const Expr& >( expr ), CosineHyperOp{} );
+}
+
+
+/**
+ * @brief Unary operation taken by \ref ScalarUnaryOp object to define the expression for
+ * computing the tangent hyperbolic of an expression.
+ */
+struct TangentHyperOp
+{
+    /**
+     * @brief Applies the transformation on the value of an expression.
+     *
+     * @param value Value of the expression
+     * @return double Transformed value
+     */
+    double applyToValue( double value ) const
+    {
+        return std::tanh( value );
+    }
+
+    /**
+     * @brief Computes the partial derivative of the unary operation.
+     *
+     * @return double Partial
+     */
+    double partial( double value ) const
+    {
+        const double tmp = std::tanh( value );
+        return 1.0 - tmp * tmp;
+    }
+};
+
+
+/**
+ * @brief Tangent function that takes an expression and creates a new expression with applied
+ * transformation.
+ *
+ * @tparam Expr Type of the expression
+ * @param expr Expression to apply tangent to
+ * @return ScalarUnaryOp< Expr, TangentHyperOp > Expression that represents the
+ * tangent operation
+ */
+template< typename Expr >
+ScalarUnaryOp< Expr, TangentHyperOp > tanh( const ScalarBase< Expr >& expr )
+{
+    return ScalarUnaryOp< Expr, TangentHyperOp >(
+        static_cast< const Expr& >( expr ), TangentHyperOp{} );
+}
+
 } // metal
 
 #endif // METAL_UNARYMATHOP_H

@@ -56,3 +56,7 @@ TEST_SCALAR_UNARY( "Unary division operator 3", "[scalar_unary_div_3]", div2, -1
 TEST_SCALAR_UNARY( "Sine test", "[scalar_unary_sin]", sin, -Pi, Pi, 100 )
 TEST_SCALAR_UNARY( "Cosine test", "[scalar_unary_cos]", cos, -Pi, Pi, 100 )
 TEST_SCALAR_UNARY( "Tangent test", "[scalar_unary_tan]", tan, -Pi / 3, Pi / 3, 100 )
+
+TEST_SCALAR_UNARY( "Sine hyperbolic test", "[scalar_unary_sinh]", sinh, -4 * Pi, 4 * Pi, 100 )
+TEST_SCALAR_UNARY( "Cosine hyperbolic test", "[scalar_unary_cosh]", cosh, -4 * Pi, 4 * Pi, 100 )
+TEST_SCALAR_UNARY( "Tangent hyperbolic test", "[scalar_unary_tanh]", tanh, -4 * Pi, 4 * Pi / 3, 100 )
