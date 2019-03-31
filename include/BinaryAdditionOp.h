@@ -13,10 +13,8 @@ namespace metal
  * two expressions.
  *
  */
-class BinaryAdditionOp
+struct BinaryAdditionOp
 {
-
-public:
     /**
      * @brief Applies the transformation on the value of an expression.
      *

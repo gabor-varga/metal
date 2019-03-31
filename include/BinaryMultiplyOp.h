@@ -13,11 +13,9 @@ namespace metal
  * multiplying two expressions.
  *
  */
-class BinaryMultiplyOp
+struct BinaryMultiplyOp
 {
-
-public:
-/**
+    /**
      * @brief Applies the transformation on the value of an expression.
      *
      * @param left LHS of the multiplication

@@ -13,11 +13,9 @@ namespace metal
  * dividing two expressions.
  *
  */
-class BinaryDivisionOp
+struct BinaryDivisionOp
 {
-
-public:
-/**
+    /**
      * @brief Applies the transformation on the value of an expression.
      *
      * @param left LHS of the division

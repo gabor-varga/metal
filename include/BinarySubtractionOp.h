@@ -13,10 +13,8 @@ namespace metal
  * subtracting two expressions.
  *
  */
-class BinarySubtractionOp
+struct BinarySubtractionOp
 {
-
-public:
     /**
      * @brief Applies the transformation on the value of an expression.
      *
