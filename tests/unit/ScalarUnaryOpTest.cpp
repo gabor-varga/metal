@@ -37,21 +37,27 @@ inline double div2( double x ) { return 2.0 / x; }
 inline metal::ScalarUnaryOp< metal::Scalar, metal::UnaryDivisionOp< metal::DivisionMode::Reverse > >
 div2( const metal::Scalar& x ) { return 2.0 / x; }
 
+inline double sqr_( double x ) { return x * x; }
+inline metal::ScalarUnaryOp< metal::Scalar, metal::SquareOp >
+sqr_( const metal::Scalar& x ) { return sqr( x ); }
 
-TEST_SCALAR_UNARY( "Unary negate operation", "[scalar_unary_negate]", negate, -10, 10, 100 )
 
-TEST_SCALAR_UNARY( "Unary addition operator 1", "[scalar_unary_add_1]", add1, -10, 10, 100 )
-TEST_SCALAR_UNARY( "Unary addition operator 2", "[scalar_unary_add_2]", add2, -10, 10, 100 )
+TEST_SCALAR_UNARY( "Unary negate operation", "[scalar_unary_negate]", negate, -10.0, 10.0, 100 )
 
-TEST_SCALAR_UNARY( "Unary subtraction operator 1", "[scalar_unary_sub_1]", sub1, -10, 10, 100 )
-TEST_SCALAR_UNARY( "Unary subtraction operator 2", "[scalar_unary_sub_2]", sub2, -10, 10, 100 )
+TEST_SCALAR_UNARY( "Unary addition operator 1", "[scalar_unary_add_1]", add1, -10.0, 10.0, 100 )
+TEST_SCALAR_UNARY( "Unary addition operator 2", "[scalar_unary_add_2]", add2, -10.0, 10.0, 100 )
 
-TEST_SCALAR_UNARY( "Unary multiplication operator 1", "[scalar_unary_mul_1]", mul1, -10, 10, 100 )
-TEST_SCALAR_UNARY( "Unary multiplication operator 2", "[scalar_unary_mul_2]", mul2, -10, 10, 100 )
+TEST_SCALAR_UNARY( "Unary subtraction operator 1", "[scalar_unary_sub_1]", sub1, -10.0, 10.0, 100 )
+TEST_SCALAR_UNARY( "Unary subtraction operator 2", "[scalar_unary_sub_2]", sub2, -10.0, 10.0, 100 )
 
-TEST_SCALAR_UNARY( "Unary division operator 1", "[scalar_unary_div_1]", div1, -10, 10, 100 )
-TEST_SCALAR_UNARY( "Unary division operator 2", "[scalar_unary_div_2]", div2, 1.0, 10, 100 )
-TEST_SCALAR_UNARY( "Unary division operator 3", "[scalar_unary_div_3]", div2, -10, -1.0, 100 )
+TEST_SCALAR_UNARY( "Unary multiplication operator 1", "[scalar_unary_mul_1]", mul1, -10.0, 10.0, 100 )
+TEST_SCALAR_UNARY( "Unary multiplication operator 2", "[scalar_unary_mul_2]", mul2, -10.0, 10.0, 100 )
+
+TEST_SCALAR_UNARY( "Unary division operator 1", "[scalar_unary_div_1]", div1, -10.0, 10.0, 100 )
+TEST_SCALAR_UNARY( "Unary division operator 2", "[scalar_unary_div_2]", div2, 1.0, 10.0, 100 )
+TEST_SCALAR_UNARY( "Unary division operator 3", "[scalar_unary_div_3]", div2, -10.0, -1.0, 100 )
+
+TEST_SCALAR_UNARY( "Square test", "[scalar_unary_sqr]", sqr_, -10.0, 10.0, 100 )
 
 TEST_SCALAR_UNARY( "Sine test", "[scalar_unary_sin]", sin, -Pi, Pi, 100 )
 TEST_SCALAR_UNARY( "Cosine test", "[scalar_unary_cos]", cos, -Pi, Pi, 100 )
