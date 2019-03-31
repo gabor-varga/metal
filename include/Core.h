@@ -11,6 +11,7 @@
 #include "UnaryMultiplyOp.h"
 #include "UnaryDivisionOp.h"
 #include "UnaryTrigonOp.h"
+#include "UnaryInverseTrigonOp.h"
 #include "ScalarBinaryOp.h"
 #include "BinaryAdditionOp.h"
 #include "BinarySubtractionOp.h"

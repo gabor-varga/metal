@@ -60,3 +60,11 @@ TEST_SCALAR_UNARY( "Tangent test", "[scalar_unary_tan]", tan, -Pi / 3, Pi / 3, 1
 TEST_SCALAR_UNARY( "Sine hyperbolic test", "[scalar_unary_sinh]", sinh, -4 * Pi, 4 * Pi, 100 )
 TEST_SCALAR_UNARY( "Cosine hyperbolic test", "[scalar_unary_cosh]", cosh, -4 * Pi, 4 * Pi, 100 )
 TEST_SCALAR_UNARY( "Tangent hyperbolic test", "[scalar_unary_tanh]", tanh, -4 * Pi, 4 * Pi / 3, 100 )
+
+TEST_SCALAR_UNARY( "Inverse sine test", "[scalar_unary_asin]", asin, -1.0, 1.0, 100 )
+TEST_SCALAR_UNARY( "Inverse cosine test", "[scalar_unary_acos]", cos, -1.0, 1.0, 100 )
+TEST_SCALAR_UNARY( "Inverse tangent test", "[scalar_unary_atan]", atan, -100.0, 100.0, 100 )
+
+TEST_SCALAR_UNARY( "Inverse sine hyperbolic test", "[scalar_unary_asinh]", asinh, -100.0, 100.0, 100 )
+TEST_SCALAR_UNARY( "Inverse cosine hyperbolic test", "[scalar_unary_acosh]", acosh, 1.0, 100.0, 100 )
+TEST_SCALAR_UNARY( "Inverse tangent hyperbolic test", "[scalar_unary_atanh]", atanh, -1.0, 1.0, 100 )
