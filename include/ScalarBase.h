@@ -236,7 +236,7 @@ namespace detail
  *
  * @tparam Expr Type of the expression to be printed
  * @param os Output stream to print to
- * @param expr Expression to be printed
+ * @param expr Expression to print
  * @return std::ostream& Modified output stream
  */
 template< typename Expr >

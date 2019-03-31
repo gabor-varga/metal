@@ -146,6 +146,16 @@ MatrixT< Rows, Cols > create(
 } // metal
 
 
+/**
+ * @brief Specialized output operator for Eigen vector expressions which use metal Scalar object.
+ * The output is optimized for viewing the value and partial derivatives. It is always using
+ * scientific notation, and the precision can be set via the std::setprecision method.
+ *
+ * @tparam Derived Eigen vector expression type
+ * @param os Output stream to output to
+ * @param vec Vector expression to print
+ * @return std::ostream& Modified output stream
+ */
 template< typename Derived,
     typename T = typename std::enable_if<
         std::is_same< typename Derived::Scalar, metal::Scalar >::value >::type >
