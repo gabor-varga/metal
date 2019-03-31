@@ -178,7 +178,7 @@ struct SineHyperOp
  * transformation.
  *
  * @tparam Expr Type of the expression
- * @param expr Expression to apply sine to
+ * @param expr Expression to apply sine hyperbolic to
  * @return ScalarUnaryOp< Expr, SineHyperOp > Expression that represents the
  * sine operation
  */
@@ -223,7 +223,7 @@ struct CosineHyperOp
  * transformation.
  *
  * @tparam Expr Type of the expression
- * @param expr Expression to apply cosine to
+ * @param expr Expression to apply cosine hyperbolic to
  * @return ScalarUnaryOp< Expr, CosineHyperOp > Expression that represents the
  * cosine operation
  */
@@ -270,7 +270,7 @@ struct TangentHyperOp
  * transformation.
  *
  * @tparam Expr Type of the expression
- * @param expr Expression to apply tangent to
+ * @param expr Expression to apply tangent hyperbolic to
  * @return ScalarUnaryOp< Expr, TangentHyperOp > Expression that represents the
  * tangent operation
  */
