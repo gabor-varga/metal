@@ -55,7 +55,7 @@ public:
      */
     ScalarUnaryOp( const Expr& expr, const Op& op )
         : expr_{ expr }
-        , op_{ op }
+        , op_( op )
         , cache_{ expr_.value() }
         , value_{ op_.applyToValue( cache_ ) }
         , partial_{ op_.partial( cache_ ) }

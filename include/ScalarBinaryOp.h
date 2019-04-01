@@ -58,7 +58,7 @@ public:
     ScalarBinaryOp( const Left& left, const Right& right, const Op& op )
         : left_{ left }
         , right_{ right }
-        , op_{ op }
+        , op_( op )
         , cache_{ left_.value(), right_.value() }
         , value_{ op_.applyToValue( cache_.first, cache_.second ) }
         , parameters_{ left_.parameters() }
