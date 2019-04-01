@@ -153,6 +153,21 @@ public:
     /**
      *  @copydoc ScalarBase::accum()
      */
+    void accum( EigenRowVectorSegment& partial, const ParameterPtr& p ) const
+    {
+        if ( left_.contains( p ) )
+        {
+            left_.accum( partial, op_.leftPartial( cache_.first, cache_.second ), p );
+        }
+        if ( right_.contains( p ) )
+        {
+            right_.accum( partial, op_.rightPartial( cache_.first, cache_.second ), p );
+        }
+    }
+
+    /**
+     *  @copydoc ScalarBase::accum()
+     */
     void accum( EigenRowVectorSegment& partial, double scalar, const ParameterPtr& p ) const
     {
         if ( left_.contains( p ) )
@@ -170,10 +185,10 @@ private:
     using Cache = std::pair< double, double >;
 
     /** LHS expression */
-    const Left& left_;
+    typename RefTypeSelector< Left >::Type left_;
 
     /** RHS expression */
-    const Right& right_;
+    typename RefTypeSelector< Right >::Type right_;
 
     /** Binary operator */
     Op op_;

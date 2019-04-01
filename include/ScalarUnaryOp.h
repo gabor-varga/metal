@@ -119,6 +119,14 @@ public:
     /**
      *  @copydoc ScalarBase::accum()
      */
+    void accum( EigenRowVectorSegment& partial, const ParameterPtr& p ) const
+    {
+        expr_.accum( partial, partial_, p );
+    }
+
+    /**
+     *  @copydoc ScalarBase::accum()
+     */
     void accum( EigenRowVectorSegment& partial, double scalar, const ParameterPtr& p ) const
     {
         expr_.accum( partial, scalar * partial_, p );
@@ -126,7 +134,7 @@ public:
 
 private:
     /** Internal expression to apply the unary operator on */
-    const Expr& expr_;
+    typename RefTypeSelector< Expr >::Type expr_;
 
     /** Operation to apply on the expression */
     Op op_;

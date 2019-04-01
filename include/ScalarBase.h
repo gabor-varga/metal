@@ -14,6 +14,7 @@
 #pragma clang diagnostic pop
 #elif defined __GNUC__
 #pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wfloat-equal"
 #pragma GCC diagnostic ignored "-Weffc++"
 #include <Eigen/Core>
 #pragma GCC diagnostic pop
@@ -59,6 +60,18 @@ struct PartialSegment
     using Type = EigenRowVectorConstSegment;
 };
 
+template< typename Expr >
+struct RefTypeSelector
+{
+    using Type = const typename std::decay< Expr >::type;
+};
+
+class Scalar;
+template<>
+struct RefTypeSelector< Scalar >
+{
+    using Type = const Scalar;
+};
 
 /**
  * @brief Base class for the expression template (ET) design pattern of scalar differential
@@ -150,6 +163,18 @@ public:
     PartialSegmentType at( const ParameterPtr& p ) const
     {
         return static_cast< const Expr& >( *this ).at( p );
+    }
+
+    /**
+     * @brief Accumulates the target partial vector with the partial vector information coming from
+     * the expression.
+     *
+     * @param partial Target partial vector segment
+     * @param p Parameter to add information of
+     */
+    void accum( EigenRowVectorSegment& partial, const ParameterPtr& p ) const
+    {
+        static_cast< const Expr& >( *this ).accum( partial, p );
     }
 
     /**

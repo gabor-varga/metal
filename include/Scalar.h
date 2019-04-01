@@ -94,7 +94,7 @@ public:
         {
             const int dim = p->dim();
             auto segment = partial_.segment( id, dim );
-            expr.accum( segment, 1.0, p );
+            expr.accum( segment, p );
             parameterMap_[p] = id;
             id += dim;
         }
@@ -177,6 +177,14 @@ public:
                                       "able to retrieve partial with respect to" );
         }
         return at( other.parameters().front() );
+    }
+
+    /**
+     *  @copydoc ScalarBase::accum()
+     */
+    void accum( EigenRowVectorSegment& partial, const ParameterPtr& p ) const
+    {
+        partial += at( p );
     }
 
     /**
