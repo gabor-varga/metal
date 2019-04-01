@@ -10,7 +10,7 @@ TEST_CASE( "Scalars can be created", "[scalar_construct]" )
     {
         const Scalar x{ 1.5 };
 
-        REQUIRE( x.value() == 1.5 );
+        REQUIRE_VALUE_EQUAL( x, 1.5 );
         REQUIRE_PARTIALS_EMPTY( x );
         REQUIRE_THROWS( x.at( nullptr ) );
     }
@@ -19,7 +19,7 @@ TEST_CASE( "Scalars can be created", "[scalar_construct]" )
     {
         const Scalar x{ 2.5, "x" };
 
-        REQUIRE( x.value() == 2.5 );
+        REQUIRE_VALUE_EQUAL( x, 2.5 );
         REQUIRE_PARTIALS_EQUAL( x, 1.0 );
     }
 }
@@ -32,7 +32,7 @@ TEST_CASE( "Scalars can be modified by adding numbers", "[scalar_modify_add]" )
         Scalar x{ 3.5 };
         x += 1.5;
 
-        REQUIRE( x.value() == 5.0 );
+        REQUIRE_VALUE_EQUAL( x, 5.0 );
         REQUIRE_PARTIALS_EMPTY( x );
     }
 
@@ -41,7 +41,7 @@ TEST_CASE( "Scalars can be modified by adding numbers", "[scalar_modify_add]" )
         Scalar x{ 3.5, "x" };
         x += 1.5;
 
-        REQUIRE( x.value() == 5.0 );
+        REQUIRE_VALUE_EQUAL( x, 5.0 );
         REQUIRE_PARTIALS_EQUAL( x, 1.0 );
     }
 }
@@ -54,7 +54,7 @@ TEST_CASE( "Scalars can be modified by subtracting numbers", "[scalar_modify_sub
         Scalar x{ 3.5 };
         x -= 1.5;
 
-        REQUIRE( x.value() == 2.0 );
+        REQUIRE_VALUE_EQUAL( x, 2.0 );
         REQUIRE_PARTIALS_EMPTY( x );
     }
 
@@ -63,7 +63,7 @@ TEST_CASE( "Scalars can be modified by subtracting numbers", "[scalar_modify_sub
         Scalar x{ 3.5, "x" };
         x -= 1.5;
 
-        REQUIRE( x.value() == 2.0 );
+        REQUIRE_VALUE_EQUAL( x, 2.0 );
         REQUIRE_PARTIALS_EQUAL( x, 1.0 );
     }
 }
@@ -76,7 +76,7 @@ TEST_CASE( "Scalars can be modified by multiplication by numbers", "[scalar_modi
         Scalar x{ 3.0 };
         x *= 1.5;
 
-        REQUIRE( x.value() == 4.5 );
+        REQUIRE_VALUE_EQUAL( x, 4.5 );
         REQUIRE_PARTIALS_EMPTY( x );
     }
 
@@ -85,7 +85,7 @@ TEST_CASE( "Scalars can be modified by multiplication by numbers", "[scalar_modi
         Scalar x{ 3.0, "x" };
         x *= 1.5;
 
-        REQUIRE( x.value() == 4.5 );
+        REQUIRE_VALUE_EQUAL( x, 4.5 );
         REQUIRE_PARTIALS_EQUAL( x, 1.5 );
     }
 }
@@ -98,7 +98,7 @@ TEST_CASE( "Scalars can be modified by dividing by numbers", "[scalar_modify_div
         Scalar x{ 3.0 };
         x /= 1.5;
 
-        REQUIRE( x.value() == 2.0 );
+        REQUIRE_VALUE_EQUAL( x, 2.0 );
         REQUIRE_PARTIALS_EMPTY( x );
     }
 
@@ -107,7 +107,7 @@ TEST_CASE( "Scalars can be modified by dividing by numbers", "[scalar_modify_div
         Scalar x{ 3.0, "x" };
         x /= 1.5;
 
-        REQUIRE( x.value() == 2.0 );
+        REQUIRE_VALUE_EQUAL( x, 2.0 );
         REQUIRE_PARTIALS_EQUAL( x, 1.0 / 1.5 );
     }
 }
