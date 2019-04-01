@@ -36,6 +36,7 @@
 .vscode
 
 # Build directory
+*_build*
 build/examples/*
 build/tests/unit/*
 build/tests/perf/*
