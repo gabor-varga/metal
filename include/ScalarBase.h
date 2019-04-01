@@ -70,7 +70,7 @@ class Scalar;
 template<>
 struct RefTypeSelector< Scalar >
 {
-    using Type = const Scalar;
+    using Type = const Scalar&;
 };
 
 /**
