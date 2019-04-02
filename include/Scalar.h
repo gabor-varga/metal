@@ -2,13 +2,14 @@
 #define METAL_SCALAR_H
 
 
+#include "BinaryAdditionOp.h"
+#include "BinaryDivisionOp.h"
+#include "BinaryMultiplyOp.h"
+#include "BinarySubtractionOp.h"
 #include "NamedParameter.h"
 #include "ScalarBase.h"
 #include "ScalarBinaryOp.h"
-#include "BinaryAdditionOp.h"
-#include "BinarySubtractionOp.h"
-#include "BinaryMultiplyOp.h"
-#include "BinaryDivisionOp.h"
+#include "UnaryMultiplyOp.h"
 #include <numeric>
 
 
@@ -251,51 +252,42 @@ public:
     }
 
     /**
-     * @brief In-place addition operator with a number.
+     * @brief In-place addition operator with another scalar.
      *
-     * @param other Floating point value to add
+     * @param other Scalar object to add to this
      * @return Scalar& Reference to modified object
      */
     Scalar& operator+=( const Scalar& other )
     {
-        *this = *this + other;
+        if ( parameterMap_ == other.parameterMap_ )
+        {
+            value_ += other.value_;
+            partial_ += other.partial_;
+        }
+        else if ( other.size() )
+        {
+            *this += other;
+        }
         return *this;
     }
 
     /**
-     * @brief In-place subtraction operator with a number.
-     *
-     * @param other Floating point value to subtract
-     * @return Scalar& Reference to modified object
+     * @brief Optimised method for adding another scalar object multiplied by a floating point value to this.
+     * 
+     * @param other Scalar object to add to this
+     * @param scalar Multiplier
      */
-    Scalar& operator-=( const Scalar& other )
+    void multAndAdd( const Scalar& other, double scalar )
     {
-        *this = *this - other;
-        return *this;
-    }
-
-    /**
-     * @brief In-place multiplication operator with a number.
-     *
-     * @param other Floating point value to multiply with
-     * @return Scalar& Reference to modified object
-     */
-    Scalar& operator*=( const Scalar& other )
-    {
-        *this = *this * other;
-        return *this;
-    }
-
-    /**
-     * @brief In-place division operator with a number.
-     *
-     * @param other Floating point value to divide with
-     * @return Scalar& Reference to modified object
-     */
-    Scalar& operator/=( const Scalar& other )
-    {
-        *this = *this / other;
-        return *this;
+        if ( parameterMap_ == other.parameterMap_ )
+        {
+            value_ += scalar * other.value_;
+            partial_ += scalar * other.partial_;
+        }
+        else
+        {
+            *this += scalar * other;
+        }
     }
 
 private:
