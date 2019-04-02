@@ -28,6 +28,8 @@ public:
     {
     }
 
+    ~NamedParameter() override;
+
     int dim() const override
     {
         return dim_;
@@ -45,6 +47,8 @@ private:
     /** Name of the parameter */
     std::string name_;
 };
+
+NamedParameter::~NamedParameter() {}
 
 } // namespace metal
 
