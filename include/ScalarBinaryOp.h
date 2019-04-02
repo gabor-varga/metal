@@ -3,6 +3,7 @@
 
 
 #include "ScalarBase.h"
+#include <numeric>
 
 
 namespace metal
