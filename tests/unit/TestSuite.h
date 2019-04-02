@@ -70,7 +70,7 @@ template< typename Expr >
 inline void REQUIRE_PARTIALS_EQUAL( const metal::ScalarBase< Expr >& x, double v )
 {
     metal::Scalar::Partial partial{ 1 };
-    partial << v;
+    partial[0] = v;
     const auto p = x.parameters().front();
     REQUIRE( x.dim() == 1 );
     REQUIRE( x.size() == 1 );

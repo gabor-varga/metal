@@ -3,6 +3,7 @@
 
 
 #include "ScalarBase.h"
+#include <algorithm>
 
 
 namespace metal
@@ -23,7 +24,7 @@ template< typename Left, typename Right, typename Op >
 struct PartialSegment< ScalarBinaryOp< Left, Right, Op > >
 {
     /** Alias for internal type */
-    using Type = EigenRowVector;
+    using Type = RowVector;
 };
 
 
@@ -41,7 +42,7 @@ class ScalarBinaryOp : public ScalarBase< ScalarBinaryOp< Left, Right, Op > >
 
 public:
     /** Alias for type of partial derivative vector. */
-    using Partial = EigenRowVector;
+    using Partial = RowVector;
 
     /** Alias for Eigen segment ET to represent part of the derivative vector */
     using PartialSegment = typename PartialSegment< ScalarBinaryOp< Left, Right, Op > >::Type;
@@ -93,18 +94,18 @@ public:
     /**
      *  @copydoc ScalarBase::dim()
      */
-    size_t dim() const
+    int dim() const
     {
         // @TODO: This could be cached, but is only ever called once in Scalar constructor, and I
         // don't see other application from the user point of view
         const auto func = []( int tmp, const ParameterPtr& p ) { return tmp + p->dim(); };
-        return std::accumulate( parameters_.begin(), parameters_.end(), size_t{ 0 }, func );
+        return std::accumulate( parameters_.begin(), parameters_.end(), int{ 0 }, func );
     }
 
     /**
      *  @copydoc ScalarBase::size()
      */
-    size_t size() const
+    int size() const
     {
         return parameters_.size();
     }
@@ -130,22 +131,22 @@ public:
     /**
      *  @copydoc ScalarBase::at()
      */
-    PartialSegment at( const ParameterPtr& p ) const
+    Partial at( const ParameterPtr& p ) const
     {
         // @TODO: This is quite expensive, and should not be used in performant code. Generally the
         // expression will be optimally evaluated when constructing a Scalar from it, and that is
         // the main use-case.
 
-        PartialSegment out = PartialSegment::Zero( p->dim() );
+        Partial out{ static_cast< int >( p->dim() ), 0.0 };
 
-        if ( left_.contains( p ) )
-        {
-            out += op_.leftPartial( cache_.first, cache_.second ) * left_.at( p );
-        }
-        if ( right_.contains( p ) )
-        {
-            out += op_.rightPartial( cache_.first, cache_.second ) * right_.at( p );
-        }
+        // if ( left_.contains( p ) )
+        // {
+        //     out += left_.at( p ) * op_.leftPartial( cache_.first, cache_.second );
+        // }
+        // if ( right_.contains( p ) )
+        // {
+        //     out += right_.at( p ) * op_.rightPartial( cache_.first, cache_.second );
+        // }
 
         return out;
     }
@@ -153,7 +154,7 @@ public:
     /**
      *  @copydoc ScalarBase::accum()
      */
-    void accum( EigenRowVectorSegment& partial, const ParameterPtr& p ) const
+    void accum( RowVectorSegment& partial, const ParameterPtr& p ) const
     {
         if ( left_.contains( p ) )
         {
@@ -168,7 +169,7 @@ public:
     /**
      *  @copydoc ScalarBase::accum()
      */
-    void accum( EigenRowVectorSegment& partial, double scalar, const ParameterPtr& p ) const
+    void accum( RowVectorSegment& partial, double scalar, const ParameterPtr& p ) const
     {
         if ( left_.contains( p ) )
         {

@@ -12,18 +12,18 @@ template< typename Expr, typename Op >
 class ScalarUnaryOp;
 
 
-/**
- * @brief Type trait for the partial segment type of a scalar unary operator.
- * 
- * @tparam Expr Type of the sub-expression referenced by this unary operation
- * @tparam Op Unary operation type
- */
-template< typename Expr, typename Op >
-struct PartialSegment< ScalarUnaryOp< Expr, Op > >
-{
-    /** Alias for internal type */
-    using Type = decltype( std::declval< typename PartialSegment< Expr >::Type >() * double{} );
-};
+// /**
+//  * @brief Type trait for the partial segment type of a scalar unary operator.
+//  * 
+//  * @tparam Expr Type of the sub-expression referenced by this unary operation
+//  * @tparam Op Unary operation type
+//  */
+// template< typename Expr, typename Op >
+// struct PartialSegment< ScalarUnaryOp< Expr, Op > >
+// {
+//     /** Alias for internal type */
+//     using Type = decltype( std::declval< typename PartialSegment< Expr >::Type >() * double{} );
+// };
 
 
 /**
@@ -73,7 +73,7 @@ public:
     /**
      *  @copydoc ScalarBase::dim()
      */
-    size_t dim() const
+    int dim() const
     {
         return expr_.dim();
     }
@@ -81,7 +81,7 @@ public:
     /**
      *  @copydoc ScalarBase::size()
      */
-    size_t size() const
+    int size() const
     {
         return expr_.size();
     }
@@ -105,13 +105,15 @@ public:
     /**
      *  @copydoc ScalarBase::at()
      */
-    PartialSegment at( const ParameterPtr& p ) const
+    Partial at( const ParameterPtr& p ) const
     {
         if ( !contains( p ) )
         {
             throw std::runtime_error( "Error! Parameter not present in partials: '"
                 + ( p ? p->name() : "NULLPTR" ) + "'" );
         }
+
+        Partial out{ static_cast< int >( p->dim() ), 0.0 };
         // return partial_.segment( expr_.parameterMap().at( p ), p->dim() );
         return expr_.at( p ) * partial_;
     }
@@ -119,7 +121,7 @@ public:
     /**
      *  @copydoc ScalarBase::accum()
      */
-    void accum( EigenRowVectorSegment& partial, const ParameterPtr& p ) const
+    void accum( RowVectorSegment& partial, const ParameterPtr& p ) const
     {
         expr_.accum( partial, partial_, p );
     }
@@ -127,7 +129,7 @@ public:
     /**
      *  @copydoc ScalarBase::accum()
      */
-    void accum( EigenRowVectorSegment& partial, double scalar, const ParameterPtr& p ) const
+    void accum( RowVectorSegment& partial, double scalar, const ParameterPtr& p ) const
     {
         expr_.accum( partial, scalar * partial_, p );
     }

@@ -3,6 +3,7 @@
 
 
 #include <algorithm>
+#include <iostream>
 
 
 namespace metal
@@ -24,13 +25,13 @@ public:
 
     FastVec() = default;
 
-    FastVec( unsigned size )
+    FastVec( int size )
         : data_{ allocate( size ) }
         , size_{ size }
     {
     }
 
-    FastVec( unsigned size, const T& value )
+    FastVec( int size, const T& value )
         : FastVec{ size }
     {
         std::fill( data_, data_ + size_, value );
@@ -78,7 +79,25 @@ public:
         return *this;
     }
 
-    void resize( unsigned size )
+    template< typename U >
+    FastVec& operator*= ( const U& scalar )
+    {
+        for ( int i = 0; i < size_; i++ )
+        {
+            data_[i] *= scalar;
+        }
+        return *this;
+    }
+
+    template< typename U >
+    FastVec& operator/= ( const U& scalar )
+    {
+        const double tmp = 1.0 / scalar;
+        *this *= tmp;
+        return *this;
+    }
+
+    void resize( int size )
     {
         if ( size > size_ )
         {
@@ -96,23 +115,33 @@ public:
         return data_;
     }
 
-    unsigned size() const
+    double operator[]( int index ) const
+    {
+        return data_[index];
+    }
+
+    double& operator[]( int index )
+    {
+        return data_[index];
+    }
+
+    int size() const
     {
         return size_;
     }
 
-    FastVecConstSegment< T > segment( unsigned start, unsigned span ) const
+    FastVecConstSegment< T > segment( int start, int span ) const
     {
         return FastVecConstSegment< T >{ *this, start, span };
     }
 
-    FastVecSegment< T > segment( unsigned start, unsigned span )
+    FastVecSegment< T > segment( int start, int span )
     {
         return FastVecSegment< T >{ *this, start, span };
     }
 
 private:
-    static Data allocate( unsigned size )
+    static Data allocate( int size )
     {
         return size ? new T[size] : nullptr;
     }
@@ -122,8 +151,18 @@ private:
     }
 
     Data data_ = nullptr;
-    unsigned size_ = 0;
+    int size_ = 0;
 };
+
+template< typename T >
+std::ostream& operator<<( std::ostream& os, const FastVec< T >& vec )
+{
+    for ( int i = 0; i < vec.size(); i++ )
+    {
+        os << vec[i] << std::endl;
+    }
+    return os;
+}
 
 
 template< typename T >
@@ -131,11 +170,16 @@ class FastVecConstSegment
 {
 
 public:
-    FastVecConstSegment( const FastVec< T >& vec, unsigned start, unsigned span )
+    FastVecConstSegment( const FastVec< T >& vec, int start, int span )
         : vec_{ vec }
         , start_{ start }
         , span_{ span }
     {
+    }
+
+    double operator[]( int index ) const
+    {
+        return vec_[start_ + index];
     }
 
     const FastVec< T >& vec() const
@@ -143,21 +187,78 @@ public:
         return vec_;
     }
 
-    unsigned start() const
+    int start() const
     {
         return start_;
     }
 
-    unsigned span() const
+    int size() const
     {
         return span_;
     }
 
 private:
     const FastVec< T >& vec_;
-    unsigned start_;
-    unsigned span_;
+    int start_;
+    int span_;
 };
+
+template< typename T >
+std::ostream& operator<<( std::ostream& os, const FastVecConstSegment< T >& segment )
+{
+    for ( int i = 0; i < segment.size(); i++ )
+    {
+        os << segment.vec()[segment.start() + i] << std::endl;
+    }
+    return os;
+}
+
+template< typename T >
+class FastVecScaledConstSegment
+{
+
+public:
+    FastVecScaledConstSegment( const FastVecConstSegment< T >& segment, double scale )
+        : segment_{ segment }
+        , scale_{ scale }
+    {
+    }
+
+    double operator[]( int index ) const
+    {
+        return scale_ * segment_[index];
+    }
+
+    const FastVec< T >& vec() const
+    {
+        return segment_.vec();
+    }
+
+    int start() const
+    {
+        return segment_.start();
+    }
+
+    int size() const
+    {
+        return segment_.size();
+    }
+
+    double scale() const
+    {
+        return scale_;
+    }
+
+private:
+    const FastVecConstSegment< T > segment_;
+    double scale_;
+};
+
+template< typename T >
+FastVecScaledConstSegment< T > operator*( const FastVecConstSegment< T >& segment, double scalar )
+{
+    return FastVecScaledConstSegment< T >{ segment, scalar };
+}
 
 
 template< typename T >
@@ -165,11 +266,16 @@ class FastVecSegment
 {
 
 public:
-    FastVecSegment( FastVec< T >& vec, unsigned start, unsigned span )
+    FastVecSegment( FastVec< T >& vec, int start, int span )
         : vec_{ vec }
         , start_{ start }
         , span_{ span }
     {
+    }
+
+    double& operator[]( int index )
+    {
+        return vec_.data()[start_ + index];
     }
 
     FastVecSegment& operator+=( const FastVec< T >& other )
@@ -186,15 +292,38 @@ public:
         return *this;
     }
 
+    FastVecSegment& operator+=( const FastVecScaledConstSegment< T >& other )
+    {
+        std::transform( vec_.data() + start_, vec_.data() + start_ + span_, other.vec().data(),
+            vec_.data() + start_, MultAndAddOp{ other.scale() } );
+        return *this;
+    }
+
 private:
     static double binaryAddOp( double left, double right )
     {
         return left + right;
     }
 
+    class MultAndAddOp
+    {
+    public:
+        MultAndAddOp( double scale )
+            : scale_{ scale }
+        {
+        }
+        double operator()( double left, double right )
+        {
+            return left + scale_ * right;
+        }
+
+    private:
+        double scale_;
+    };
+
     FastVec< T >& vec_;
-    unsigned start_;
-    unsigned span_;
+    int start_;
+    int span_;
 };
 
 } // metal

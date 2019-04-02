@@ -2,38 +2,42 @@
 #define METAL_SCALARBASE_H
 
 
+#include "FastVec.h"
 #include "Parameter.h"
 #include <exception>
 #include <iomanip>
 #include <iostream>
 
-#ifdef __clang__
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Weverything"
-#include <Eigen/Core>
-#pragma clang diagnostic pop
-#elif defined __GNUC__
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wfloat-equal"
-#pragma GCC diagnostic ignored "-Weffc++"
-#include <Eigen/Core>
-#pragma GCC diagnostic pop
-#else
-#include <Eigen/Core>
-#endif
+// #ifdef __clang__
+// #pragma clang diagnostic push
+// #pragma clang diagnostic ignored "-Weverything"
+// #include <Eigen/Core>
+// #pragma clang diagnostic pop
+// #elif defined __GNUC__
+// #pragma GCC diagnostic push
+// #pragma GCC diagnostic ignored "-Wfloat-equal"
+// #pragma GCC diagnostic ignored "-Weffc++"
+// #include <Eigen/Core>
+// #pragma GCC diagnostic pop
+// #else
+// #include <Eigen/Core>
+// #endif
 
 
 namespace metal
 {
 
 /* Alias for eigen row vector */
-using EigenRowVector = Eigen::Matrix< double, 1, -1 >;
+// using RowVector = Eigen::Matrix< double, 1, -1 >;
+using RowVector = FastVec< double >;
 
 /* Alias for eigen row vector segment */
-using EigenRowVectorSegment = Eigen::VectorBlock< EigenRowVector, -1 >;
+// using RowVectorSegment = Eigen::VectorBlock< RowVector, -1 >;
+using RowVectorSegment = FastVecSegment< double >;
 
 /* Alias for eigen row vector const segment */
-using EigenRowVectorConstSegment = Eigen::VectorBlock< const EigenRowVector, -1 >;
+// using RowVectorConstSegment = Eigen::VectorBlock< const RowVector, -1 >;
+using RowVectorConstSegment = FastVecConstSegment< double >;
 
 
 /**
@@ -45,7 +49,7 @@ template< typename Expr >
 struct Partial
 {
     /** Alias for internal type */
-    using Type = EigenRowVector;
+    using Type = RowVector;
 };
 
 /**
@@ -57,7 +61,7 @@ template< typename Expr >
 struct PartialSegment
 {
     /** Alias for internal type */
-    using Type = EigenRowVectorConstSegment;
+    using Type = RowVectorConstSegment;
 };
 
 template< typename Expr >
@@ -103,9 +107,9 @@ public:
     /**
      * @brief Returns the dimension of the partial derivative vector.
      *
-     * @return size_t Size of the derivative vector
+     * @return int Size of the derivative vector
      */
-    size_t dim() const
+    int dim() const
     {
         return static_cast< const Expr& >( *this ).dim();
     }
@@ -114,11 +118,11 @@ public:
      * @brief Returns the number of parameters stored and returned by the \ref parameters
      * method.
      *
-     * @return size_t Number of parameters associated with the derivatives
+     * @return int Number of parameters associated with the derivatives
      *
      * @see parameters
      */
-    size_t size() const
+    int size() const
     {
         return static_cast< const Expr& >( *this ).size();
     }
@@ -172,7 +176,7 @@ public:
      * @param partial Target partial vector segment
      * @param p Parameter to add information of
      */
-    void accum( EigenRowVectorSegment& partial, const ParameterPtr& p ) const
+    void accum( RowVectorSegment& partial, const ParameterPtr& p ) const
     {
         static_cast< const Expr& >( *this ).accum( partial, p );
     }
@@ -185,7 +189,7 @@ public:
      * @param scalar Partial multiplier
      * @param p Parameter to add information of
      */
-    void accum( EigenRowVectorSegment& partial, double scalar, const ParameterPtr& p ) const
+    void accum( RowVectorSegment& partial, double scalar, const ParameterPtr& p ) const
     {
         static_cast< const Expr& >( *this ).accum( partial, scalar, p );
     }

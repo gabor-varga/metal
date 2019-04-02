@@ -67,7 +67,7 @@ public:
      */
     Scalar( double value, const std::string& name )
         : value_{ value }
-        , partial_{ Eigen::Matrix< double, 1, 1 >::Ones() }
+        , partial_{ 1, 1.0 }
         , parameterMap_{ { { std::make_shared< NamedParameter >( 1, name ), 0 } } }
     {
     }
@@ -82,12 +82,9 @@ public:
     template< typename Expr >
     Scalar( const ScalarBase< Expr >& expr )
         : value_{ expr.value() }
-        , partial_{}
+        , partial_{ expr.dim(), 0.0 }
         , parameterMap_{}
     {
-        const int totalDim = static_cast< int >( expr.dim() );
-        partial_.setZero( totalDim );
-
         int id = 0;
         const auto& params = expr.parameters();
         for ( const auto& p : params )
@@ -111,17 +108,17 @@ public:
     /**
      *  @copydoc ScalarBase::dim()
      */
-    size_t dim() const
+    int dim() const
     {
-        return static_cast< size_t >( partial_.size() );
+        return static_cast< int >( partial_.size() );
     }
 
     /**
      *  @copydoc ScalarBase::size()
      */
-    size_t size() const
+    int size() const
     {
-        return parameterMap_.size();
+        return static_cast< int >( parameterMap_.size() );
     }
 
     /**
@@ -182,7 +179,7 @@ public:
     /**
      *  @copydoc ScalarBase::accum()
      */
-    void accum( EigenRowVectorSegment& partial, const ParameterPtr& p ) const
+    void accum( RowVectorSegment& partial, const ParameterPtr& p ) const
     {
         partial += at( p );
     }
@@ -190,9 +187,9 @@ public:
     /**
      *  @copydoc ScalarBase::accum()
      */
-    void accum( EigenRowVectorSegment& partial, double scalar, const ParameterPtr& p ) const
+    void accum( RowVectorSegment& partial, double scalar, const ParameterPtr& p ) const
     {
-        partial += scalar * at( p );
+        partial += at( p ) * scalar;
     }
 
     /**

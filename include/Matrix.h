@@ -133,12 +133,13 @@ MatrixT< Rows, Cols > create(
 {
     const int dim = static_cast< int >( value.size() );
     MatrixT< Rows, Cols > out{ value.rows(), value.cols() };
-    const auto partial = Eigen::Matrix< double, -1, -1 >::Identity( dim, dim );
 
     const auto p = std::make_shared< NamedParameter >( dim, name );
     for ( int i = 0; i < dim; i++ )
     {
-        out[i] = metal::Scalar{ value[i], p, partial.row( i ) };
+        metal::RowVector partial{ dim, 0.0 };
+        partial[dim] = 1.0;
+        out[i] = metal::Scalar{ value[i], p, partial };
     }
     return out;
 }
