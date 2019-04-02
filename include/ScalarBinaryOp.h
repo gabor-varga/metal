@@ -3,7 +3,7 @@
 
 
 #include "ScalarBase.h"
-#include <algorithm>
+#include <numeric>
 
 
 namespace metal
@@ -63,23 +63,43 @@ public:
         , cache_{ left_.value(), right_.value() }
         , value_{ op_.applyToValue( cache_.first, cache_.second ) }
         , parameters_{ left_.parameters() }
+        , totalDim_{ 0 }
     {
-        // Cache some checks to help optimally construct the vector of all parameters that the
-        // expression references
-        const bool condition1 = parameters_.size() == 0;
-        const bool condition2 = right_.size() && left_.parameters() != right_.parameters();
+        if ( left_.size() && right_.size() )
+        {
+            if ( left_.parameters() == right_.parameters() )
+            {
+                parameters_ = left_.parameters();
+            }
+            else
+            {
+                auto keys = left_.parameters();
+                for ( const auto& p : right_.parameters() )
+                {
+                    if ( std::find( keys.begin(), keys.end(), p ) == keys.end() )
+                    // if ( !std::binary_search( keys.begin(), keys.end(), p ) )
+                    {
+                        keys.push_back( p );
+                    }
+                }
 
-        // @TODO: This part could probably be optimised better
-        if ( condition1 || condition2 )
-        {
-            const auto& params = right_.parameters();
-            parameters_.insert( parameters_.end(), params.begin(), params.end() );
+                totalDim_ = std::accumulate( keys.begin(), keys.end(), 0, [] 
+                ( int s, ParameterPtr p ) 
+                { 
+                    return s + p->dim(); 
+                } );
+            }
         }
-        if ( condition2 )
+        else if ( left_.size() == 0 && right_.size() == 0 )
         {
-            std::sort( parameters_.begin(), parameters_.end() );
-            parameters_.erase(
-                std::unique( parameters_.begin(), parameters_.end() ), parameters_.end() );
+        }
+        else if ( left_.size() )
+        {
+            parameters_ = left_.parameters();
+        }
+        else // right_.size()
+        {
+            parameters_ = right_.parameters();
         }
     }
 
@@ -107,7 +127,7 @@ public:
      */
     int size() const
     {
-        return parameters_.size();
+        return static_cast< int >( parameters_.size() );
     }
 
     /**
@@ -139,14 +159,14 @@ public:
 
         Partial out{ static_cast< int >( p->dim() ), 0.0 };
 
-        // if ( left_.contains( p ) )
-        // {
-        //     out += left_.at( p ) * op_.leftPartial( cache_.first, cache_.second );
-        // }
-        // if ( right_.contains( p ) )
-        // {
-        //     out += right_.at( p ) * op_.rightPartial( cache_.first, cache_.second );
-        // }
+        if ( left_.contains( p ) )
+        {
+            out.segment( 0, p->dim() ) += left_.at( p ) * op_.leftPartial( cache_.first, cache_.second );
+        }
+        if ( right_.contains( p ) )
+        {
+            out.segment( 0, p->dim() ) += right_.at( p ) * op_.rightPartial( cache_.first, cache_.second );
+        }
 
         return out;
     }
@@ -202,6 +222,9 @@ private:
 
     /** Cached parameters from expression */
     ParameterPtrVector parameters_;
+
+    /** Dimension of partial vector */
+    int totalDim_;
 };
 
 } // metal

@@ -13,6 +13,9 @@ template< typename T >
 class FastVecConstSegment;
 
 template< typename T >
+class FastVecScaledConstSegment;
+
+template< typename T >
 class FastVecSegment;
 
 
@@ -36,6 +39,30 @@ public:
     {
         std::fill( data_, data_ + size_, value );
     }
+
+    FastVec( const FastVecConstSegment< T >& other )
+        : data_{ allocate( other.size() ) }
+        , size_{ other.size() }
+    {
+        std::copy( other.vec().data() + other.start(),
+            other.vec().data() + other.start() + other.size(), data_ );
+    }
+
+    FastVec( const FastVecScaledConstSegment< T >& other )
+        : data_{ allocate( other.size() ) }
+        , size_{ other.size() }
+    {
+        std::copy( other.vec().data() + other.start(),
+            other.vec().data() + other.start() + other.size(), data_ );
+        *this *= other.scale();
+    }
+
+    // FastVec( const FastVecSegment< T >& other )
+    //     : data_{ allocate( other.size() ) }
+    //     , size_{ other.size() }
+    // {
+    //     std::copy( other.vec().data() );
+    // }
 
     ~FastVec()
     {
@@ -80,7 +107,7 @@ public:
     }
 
     template< typename U >
-    FastVec& operator*= ( const U& scalar )
+    FastVec& operator*=( const U& scalar )
     {
         for ( int i = 0; i < size_; i++ )
         {
@@ -90,7 +117,7 @@ public:
     }
 
     template< typename U >
-    FastVec& operator/= ( const U& scalar )
+    FastVec& operator/=( const U& scalar )
     {
         const double tmp = 1.0 / scalar;
         *this *= tmp;

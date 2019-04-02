@@ -69,13 +69,11 @@ inline void REQUIRE_VALUE_EQUAL( const metal::ScalarBase< Expr >& x, double v )
 template< typename Expr >
 inline void REQUIRE_PARTIALS_EQUAL( const metal::ScalarBase< Expr >& x, double v )
 {
-    metal::Scalar::Partial partial{ 1 };
-    partial[0] = v;
     const auto p = x.parameters().front();
     REQUIRE( x.dim() == 1 );
     REQUIRE( x.size() == 1 );
     REQUIRE( x.parameters() == metal::ParameterPtrVector{ p } );
-    REQUIRE( x.at( p ) == partial );
+    REQUIRE( almostEqual( x.at( p )[0], v ) );
 }
 
 
