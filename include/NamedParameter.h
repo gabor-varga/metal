@@ -28,8 +28,6 @@ public:
     {
     }
 
-    ~NamedParameter() override;
-
     int dim() const override
     {
         return dim_;
@@ -47,10 +45,6 @@ private:
     /** Name of the parameter */
     std::string name_;
 };
-
-
-// Defined outside to avoid weak-vtables clang warning
-NamedParameter::~NamedParameter() {}
 
 } // namespace metal
 

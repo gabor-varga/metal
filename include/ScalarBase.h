@@ -63,14 +63,14 @@ struct PartialSegment
 template< typename Expr >
 struct RefTypeSelector
 {
-    using Type = const typename std::decay< Expr >::type;
+    using Type = const typename std::decay< Expr >::type&;
 };
 
 class Scalar;
 template<>
 struct RefTypeSelector< Scalar >
 {
-    using Type = const Scalar;
+    using Type = const Scalar&;
 };
 
 /**

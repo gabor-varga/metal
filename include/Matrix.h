@@ -40,7 +40,7 @@ struct NumTraits< metal::Scalar > : NumTraits< double >
     using Nested = metal::Scalar;
 
     /** Alias for literal type */
-    using Literal = double;
+    using Literal = metal::Scalar;
 
     /**
      * @brief Enum fo further settings
@@ -128,17 +128,74 @@ using Vector6 = VectorT< 6 >;
  * @return MatrixT< Rows, Cols > Matrix containing partials
  */
 template< int Rows, int Cols >
+MatrixT< Rows, Cols > create( const Eigen::Matrix< double, Rows, Cols >& value )
+{
+    MatrixT< Rows, Cols > out{ value.rows(), value.cols() };
+    for ( int i = 0; i < value.rows(); i++ )
+    {
+        for ( int j = 0; j < value.cols(); j++ )
+        {
+            out( i, j ) = metal::Scalar{ value( i, j ) };
+        }
+    }
+    return out;
+}
+
+/**
+ * @brief Creates a metal matrix vaiable from an Eigen matrix variable including the partial
+ * derivatives referring to the named parameter created using the provided name.
+ *
+ * @tparam Rows Number of rows of the input/output matrix
+ * @tparam Cols Number of columns of the input/output matrix
+ * @param value Value of the matrix
+ * @param name Name of the parameter to create
+ * @return MatrixT< Rows, Cols > Matrix containing partials
+ */
+template< int Rows, int Cols >
 MatrixT< Rows, Cols > create(
     const Eigen::Matrix< double, Rows, Cols >& value, const std::string& name )
 {
     const int dim = static_cast< int >( value.size() );
-    MatrixT< Rows, Cols > out{ value.rows(), value.cols() };
+    const auto p = std::make_shared< NamedParameter >( dim, name );
     const auto partial = Eigen::Matrix< double, -1, -1 >::Identity( dim, dim );
 
-    const auto p = std::make_shared< NamedParameter >( dim, name );
-    for ( int i = 0; i < dim; i++ )
+    MatrixT< Rows, Cols > out{ value.rows(), value.cols() };
+    for ( int i = 0; i < value.rows(); i++ )
     {
-        out[i] = metal::Scalar{ value[i], p, partial.row( i ) };
+        for ( int j = 0; j < value.cols(); j++ )
+        {
+            out( i, j ) = metal::Scalar{ value( i, j ), p, partial.row( j * value.rows() + i ) };
+        }
+    }
+    return out;
+}
+
+/**
+ * @brief Creates a metal matrix vaiable from an Eigen matrix variable including the partial
+ * derivatives referring to the named parameter created using the provided name.
+ *
+ * @tparam Rows Number of rows of the input/output matrix
+ * @tparam Cols Number of columns of the input/output matrix
+ * @param value Value of the matrix
+ * @param name Name of the parameter to create
+ * @return MatrixT< Rows, Cols > Matrix containing partials
+ */
+template< int Rows, int Cols >
+MatrixT< Rows, Cols > create(
+    const Eigen::Matrix< double, Rows, Cols >& value, bool partials, const std::string& name )
+{
+    const int dim = static_cast< int >( value.size() );
+    const auto p = std::make_shared< NamedParameter >( dim, name );
+    const auto partial = Eigen::Matrix< double, -1, -1 >::Identity( dim, dim );
+    
+    MatrixT< Rows, Cols > out{ value.rows(), value.cols() };
+    for ( int i = 0; i < value.rows(); i++ )
+    {
+        for ( int j = 0; j < value.cols(); j++ )
+        {
+            out( i, j ) = partials ? metal::Scalar{ value( i, j ), p, partial.row( j * value.rows() + i ) } : 
+                            metal::Scalar{ value( i, j ) };
+        }
     }
     return out;
 }

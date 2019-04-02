@@ -54,7 +54,7 @@ public:
      * @param op Operation that defines the transformation
      */
     ScalarUnaryOp( const Expr& expr, const Op& op )
-        : expr_{ expr }
+        : expr_( expr )
         , op_( op )
         , cache_{ expr_.value() }
         , value_{ op_.applyToValue( cache_ ) }

@@ -4,6 +4,11 @@
 
 #include "NamedParameter.h"
 #include "ScalarBase.h"
+#include "ScalarBinaryOp.h"
+#include "BinaryAdditionOp.h"
+#include "BinarySubtractionOp.h"
+#include "BinaryMultiplyOp.h"
+#include "BinaryDivisionOp.h"
 #include <numeric>
 
 
@@ -242,6 +247,54 @@ public:
     {
         value_ /= other;
         partial_ /= other;
+        return *this;
+    }
+
+    /**
+     * @brief In-place addition operator with a number.
+     *
+     * @param other Floating point value to add
+     * @return Scalar& Reference to modified object
+     */
+    Scalar& operator+=( const Scalar& other )
+    {
+        *this = *this + other;
+        return *this;
+    }
+
+    /**
+     * @brief In-place subtraction operator with a number.
+     *
+     * @param other Floating point value to subtract
+     * @return Scalar& Reference to modified object
+     */
+    Scalar& operator-=( const Scalar& other )
+    {
+        *this = *this - other;
+        return *this;
+    }
+
+    /**
+     * @brief In-place multiplication operator with a number.
+     *
+     * @param other Floating point value to multiply with
+     * @return Scalar& Reference to modified object
+     */
+    Scalar& operator*=( const Scalar& other )
+    {
+        *this = *this * other;
+        return *this;
+    }
+
+    /**
+     * @brief In-place division operator with a number.
+     *
+     * @param other Floating point value to divide with
+     * @return Scalar& Reference to modified object
+     */
+    Scalar& operator/=( const Scalar& other )
+    {
+        *this = *this / other;
         return *this;
     }
 
