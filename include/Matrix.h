@@ -124,7 +124,6 @@ using Vector6 = VectorT< 6 >;
  * @tparam Rows Number of rows of the input/output matrix
  * @tparam Cols Number of columns of the input/output matrix
  * @param value Value of the matrix
- * @param name Name of the parameter to create
  * @return MatrixT< Rows, Cols > Matrix containing partials
  */
 template< int Rows, int Cols >
