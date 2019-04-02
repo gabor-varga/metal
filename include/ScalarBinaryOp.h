@@ -62,7 +62,7 @@ public:
         , op_( op )
         , cache_{ left_.value(), right_.value() }
         , value_{ op_.applyToValue( cache_.first, cache_.second ) }
-        , parameters_{ left_.parameters() }
+        , parameters_{}
         , totalDim_{ 0 }
     {
         if ( left_.size() && right_.size() )
@@ -73,21 +73,15 @@ public:
             }
             else
             {
-                auto keys = left_.parameters();
+                parameters_ = left_.parameters();
                 for ( const auto& p : right_.parameters() )
                 {
-                    if ( std::find( keys.begin(), keys.end(), p ) == keys.end() )
-                    // if ( !std::binary_search( keys.begin(), keys.end(), p ) )
+                    if ( std::find( parameters_.begin(), parameters_.end(), p ) == parameters_.end() )
+                    // if ( !std::binary_search( parameters_.begin(), parameters_.end(), p ) )
                     {
-                        keys.push_back( p );
+                        parameters_.push_back( p );
                     }
                 }
-
-                totalDim_ = std::accumulate( keys.begin(), keys.end(), 0, [] 
-                ( int s, ParameterPtr p ) 
-                { 
-                    return s + p->dim(); 
-                } );
             }
         }
         else if ( left_.size() == 0 && right_.size() == 0 )
