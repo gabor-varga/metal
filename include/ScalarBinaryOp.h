@@ -56,29 +56,49 @@ public:
      * @param op Operation to apply on LHS and RHS
      */
     ScalarBinaryOp( const Left& left, const Right& right, const Op& op )
-        : left_{ left }
-        , right_{ right }
+        : left_( left )
+        , right_( right )
         , op_( op )
         , cache_{ left_.value(), right_.value() }
         , value_{ op_.applyToValue( cache_.first, cache_.second ) }
-        , parameters_{ left_.parameters() }
+        , parameters_{}
+        , totalDim_{ 0 }
     {
-        // Cache some checks to help optimally construct the vector of all parameters that the
-        // expression references
-        const bool condition1 = parameters_.size() == 0;
-        const bool condition2 = right_.size() && left_.parameters() != right_.parameters();
+        if ( left_.size() && right_.size() )
+        {
+            if ( left_.parameters() == right_.parameters() )
+            {
+                parameters_ = left_.parameters();
+            }
+            else
+            {
+                auto keys = left_.parameters();
+                for ( const auto& p : right_.parameters() )
+                {
+                    if ( std::find( keys.begin(), keys.end(), p ) == keys.end() )
+                    // if ( !std::binary_search( keys.begin(), keys.end(), p ) )
+                    {
+                        keys.push_back( p );
+                    }
+                }
 
-        // @TODO: This part could probably be optimised better
-        if ( condition1 || condition2 )
-        {
-            const auto& params = right_.parameters();
-            parameters_.insert( parameters_.end(), params.begin(), params.end() );
+                totalDim_ = std::accumulate( keys.begin(), keys.end(), 0, [] 
+                ( int s, ParameterPtr p ) 
+                { 
+                    return s + p->dim(); 
+                } );
+            }
         }
-        if ( condition2 )
+        else if ( left_.size() == 0 && right_.size() == 0 )
         {
-            std::sort( parameters_.begin(), parameters_.end() );
-            parameters_.erase(
-                std::unique( parameters_.begin(), parameters_.end() ), parameters_.end() );
+        }
+        else if ( left_.size() )
+        {
+            parameters_ = left_.parameters();
+        }
+        else // right_.size()
+        {
+            parameters_ = right_.parameters();
         }
     }
 
@@ -201,6 +221,8 @@ private:
 
     /** Cached parameters from expression */
     ParameterPtrVector parameters_;
+
+    int totalDim_;
 };
 
 } // metal

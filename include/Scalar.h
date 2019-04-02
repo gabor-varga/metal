@@ -2,8 +2,14 @@
 #define METAL_SCALAR_H
 
 
+#include "BinaryAdditionOp.h"
+#include "BinaryDivisionOp.h"
+#include "BinaryMultiplyOp.h"
+#include "BinarySubtractionOp.h"
 #include "NamedParameter.h"
 #include "ScalarBase.h"
+#include "ScalarBinaryOp.h"
+#include "UnaryMultiplyOp.h"
 #include <numeric>
 
 
@@ -243,6 +249,45 @@ public:
         value_ /= other;
         partial_ /= other;
         return *this;
+    }
+
+    /**
+     * @brief In-place addition operator with another scalar.
+     *
+     * @param other Scalar object to add to this
+     * @return Scalar& Reference to modified object
+     */
+    Scalar& operator+=( const Scalar& other )
+    {
+        if ( parameterMap_ == other.parameterMap_ )
+        {
+            value_ += other.value_;
+            partial_ += other.partial_;
+        }
+        else if ( other.size() )
+        {
+            *this += other;
+        }
+        return *this;
+    }
+
+    /**
+     * @brief Optimised method for adding another scalar object multiplied by a floating point value to this.
+     * 
+     * @param other Scalar object to add to this
+     * @param scalar Multiplier
+     */
+    void multAndAdd( const Scalar& other, double scalar )
+    {
+        if ( parameterMap_ == other.parameterMap_ )
+        {
+            value_ += scalar * other.value_;
+            partial_ += scalar * other.partial_;
+        }
+        else
+        {
+            *this += scalar * other;
+        }
     }
 
 private:
