@@ -43,8 +43,10 @@ class ScalarUnaryOp : public ScalarBase< ScalarUnaryOp< Expr, Op > >
 
 public:
     /** Alias for Eigen segment ET to represent part of the derivative vector */
-    using PartialSegment = typename PartialSegment< ScalarUnaryOp< Expr, Op > >::Type;
+    using Partial = typename Partial< ScalarUnaryOp< Expr, Op > >::Type;
 
+    /** Alias for Eigen segment ET to represent part of the derivative vector */
+    using PartialSegment = typename PartialSegment< ScalarUnaryOp< Expr, Op > >::Type;
 
     /**
      * @brief Construct a new Scalar Unary Op object using an expression to apply an operation
