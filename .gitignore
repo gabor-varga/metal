@@ -35,6 +35,10 @@
 *.code-workspace
 .vscode
 
+# Makefiles for external build
+Makefile
+configure.ksh
+
 # Build directory
 *_build*
 build/examples/*
