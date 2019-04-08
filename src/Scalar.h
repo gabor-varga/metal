@@ -2,14 +2,14 @@
 #define METAL_SCALAR_H
 
 
-#include "BinaryAdditionOp.h"
-#include "BinaryDivisionOp.h"
-#include "BinaryMultiplyOp.h"
-#include "BinarySubtractionOp.h"
-#include "NamedParameter.h"
-#include "ScalarBase.h"
-#include "ScalarBinaryOp.h"
-#include "UnaryMultiplyOp.h"
+#include "src/BinaryAdditionOp.h"
+#include "src/BinaryDivisionOp.h"
+#include "src/BinaryMultiplyOp.h"
+#include "src/BinarySubtractionOp.h"
+#include "src/NamedParameter.h"
+#include "src/ScalarBase.h"
+#include "src/ScalarBinaryOp.h"
+#include "src/UnaryMultiplyOp.h"
 #include <numeric>
 
 

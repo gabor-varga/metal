@@ -1,5 +1,5 @@
-#include "Core.h"
-#include "Matrix.h"
+#include "src/Core.h"
+#include "src/Matrix.h"
 
 
 int main()

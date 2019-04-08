@@ -2,7 +2,7 @@
 #define METAL_UNARYNEGATEOP_H
 
 
-#include "ScalarUnaryOp.h"
+#include "src/ScalarUnaryOp.h"
 
 
 namespace metal

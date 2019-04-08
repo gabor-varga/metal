@@ -1,8 +1,8 @@
-#ifndef METAL_UNARYINVERSETRIGONOP_H
-#define METAL_UNARYINVERSETRIGONOP_H
+#ifndef METAL_UNARYTRIGONOP_H
+#define METAL_UNARYTRIGONOP_H
 
 
-#include "ScalarUnaryOp.h"
+#include "src/ScalarUnaryOp.h"
 #include <cmath>
 
 
@@ -11,9 +11,9 @@ namespace metal
 
 /**
  * @brief Unary operation taken by \ref ScalarUnaryOp object to define the expression for
- * computing the inverse sine of an expression.
+ * computing the sine of an expression.
  */
-struct InverseSineOp
+struct SineOp
 {
     /**
      * @brief Applies the transformation on the value of an expression.
@@ -23,7 +23,7 @@ struct InverseSineOp
      */
     double applyToValue( double value ) const
     {
-        return std::asin( value );
+        return std::sin( value );
     }
 
     /**
@@ -33,7 +33,7 @@ struct InverseSineOp
      */
     double partial( double value ) const
     {
-        return 1.0 / std::sqrt( 1.0 - value * value );
+        return std::cos( value );
     }
 };
 
@@ -43,23 +43,22 @@ struct InverseSineOp
  * transformation.
  *
  * @tparam Expr Type of the expression
- * @param expr Expression to apply inverse sine to
- * @return ScalarUnaryOp< Expr, InverseSineOp > Expression that represents the inverse
+ * @param expr Expression to apply sine to
+ * @return ScalarUnaryOp< Expr, SineOp > Expression that represents the
  * sine operation
  */
 template< typename Expr >
-ScalarUnaryOp< Expr, InverseSineOp > asin( const ScalarBase< Expr >& expr )
+ScalarUnaryOp< Expr, SineOp > sin( const ScalarBase< Expr >& expr )
 {
-    return ScalarUnaryOp< Expr, InverseSineOp >(
-        static_cast< const Expr& >( expr ), InverseSineOp{} );
+    return ScalarUnaryOp< Expr, SineOp >( static_cast< const Expr& >( expr ), SineOp{} );
 }
 
 
 /**
  * @brief Unary operation taken by \ref ScalarUnaryOp object to define the expression for
- * computing the inverse cosine of an expression.
+ * computing the cosine of an expression.
  */
-struct InverseCosineOp
+struct CosineOp
 {
     /**
      * @brief Applies the transformation on the value of an expression.
@@ -69,7 +68,7 @@ struct InverseCosineOp
      */
     double applyToValue( double value ) const
     {
-        return std::acos( value );
+        return std::cos( value );
     }
 
     /**
@@ -79,7 +78,7 @@ struct InverseCosineOp
      */
     double partial( double value ) const
     {
-        return -1.0 / std::sqrt( 1.0 - value * value );
+        return -std::sin( value );
     }
 };
 
@@ -89,23 +88,22 @@ struct InverseCosineOp
  * transformation.
  *
  * @tparam Expr Type of the expression
- * @param expr Expression to apply inverse cosine to
- * @return ScalarUnaryOp< Expr, InverseCosineOp > Expression that represents the inverse
+ * @param expr Expression to apply cosine to
+ * @return ScalarUnaryOp< Expr, CosineOp > Expression that represents the
  * cosine operation
  */
 template< typename Expr >
-ScalarUnaryOp< Expr, InverseCosineOp > acos( const ScalarBase< Expr >& expr )
+ScalarUnaryOp< Expr, CosineOp > cos( const ScalarBase< Expr >& expr )
 {
-    return ScalarUnaryOp< Expr, InverseCosineOp >(
-        static_cast< const Expr& >( expr ), InverseCosineOp{} );
+    return ScalarUnaryOp< Expr, CosineOp >( static_cast< const Expr& >( expr ), CosineOp{} );
 }
 
 
 /**
  * @brief Unary operation taken by \ref ScalarUnaryOp object to define the expression for
- * computing the inverse tangent of an expression.
+ * computing the tangent of an expression.
  */
-struct InverseTangentOp
+struct TangentOp
 {
     /**
      * @brief Applies the transformation on the value of an expression.
@@ -115,7 +113,7 @@ struct InverseTangentOp
      */
     double applyToValue( double value ) const
     {
-        return std::atan( value );
+        return std::tan( value );
     }
 
     /**
@@ -125,7 +123,8 @@ struct InverseTangentOp
      */
     double partial( double value ) const
     {
-        return 1.0 / ( 1.0 + value * value );
+        const double tmp = std::cos( value );
+        return 1.0 / ( tmp * tmp );
     }
 };
 
@@ -135,22 +134,21 @@ struct InverseTangentOp
  * transformation.
  *
  * @tparam Expr Type of the expression
- * @param expr Expression to apply inverse tangent to
- * @return ScalarUnaryOp< Expr, InverseTangentOp > Expression that represents the inverse
+ * @param expr Expression to apply tangent to
+ * @return ScalarUnaryOp< Expr, TangentOp > Expression that represents the
  * tangent operation
  */
 template< typename Expr >
-ScalarUnaryOp< Expr, InverseTangentOp > atan( const ScalarBase< Expr >& expr )
+ScalarUnaryOp< Expr, TangentOp > tan( const ScalarBase< Expr >& expr )
 {
-    return ScalarUnaryOp< Expr, InverseTangentOp >(
-        static_cast< const Expr& >( expr ), InverseTangentOp{} );
+    return ScalarUnaryOp< Expr, TangentOp >( static_cast< const Expr& >( expr ), TangentOp{} );
 }
 
 /**
  * @brief Unary operation taken by \ref ScalarUnaryOp object to define the expression for
- * computing the inverse sine hyperbolic of an expression.
+ * computing the sine hyperbolic of an expression.
  */
-struct InverseSineHyperOp
+struct SineHyperOp
 {
     /**
      * @brief Applies the transformation on the value of an expression.
@@ -160,7 +158,7 @@ struct InverseSineHyperOp
      */
     double applyToValue( double value ) const
     {
-        return std::asinh( value );
+        return std::sinh( value );
     }
 
     /**
@@ -170,7 +168,7 @@ struct InverseSineHyperOp
      */
     double partial( double value ) const
     {
-        return 1.0 / std::sqrt( value * value + 1.0 );
+        return std::cosh( value );
     }
 };
 
@@ -180,23 +178,22 @@ struct InverseSineHyperOp
  * transformation.
  *
  * @tparam Expr Type of the expression
- * @param expr Expression to apply inverse sine hyperbolic to
- * @return ScalarUnaryOp< Expr, InverseSineHyperOp > Expression that represents the inverse
+ * @param expr Expression to apply sine hyperbolic to
+ * @return ScalarUnaryOp< Expr, SineHyperOp > Expression that represents the
  * sine operation
  */
 template< typename Expr >
-ScalarUnaryOp< Expr, InverseSineHyperOp > asinh( const ScalarBase< Expr >& expr )
+ScalarUnaryOp< Expr, SineHyperOp > sinh( const ScalarBase< Expr >& expr )
 {
-    return ScalarUnaryOp< Expr, InverseSineHyperOp >(
-        static_cast< const Expr& >( expr ), InverseSineHyperOp{} );
+    return ScalarUnaryOp< Expr, SineHyperOp >( static_cast< const Expr& >( expr ), SineHyperOp{} );
 }
 
 
 /**
  * @brief Unary operation taken by \ref ScalarUnaryOp object to define the expression for
- * computing the inverse cosine hyperbolic of an expression.
+ * computing the cosine hyperbolic of an expression.
  */
-struct InverseCosineHyperOp
+struct CosineHyperOp
 {
     /**
      * @brief Applies the transformation on the value of an expression.
@@ -206,7 +203,7 @@ struct InverseCosineHyperOp
      */
     double applyToValue( double value ) const
     {
-        return std::acosh( value );
+        return std::cosh( value );
     }
 
     /**
@@ -216,7 +213,7 @@ struct InverseCosineHyperOp
      */
     double partial( double value ) const
     {
-        return 1.0 / std::sqrt( value * value - 1.0 );
+        return std::sinh( value );
     }
 };
 
@@ -226,23 +223,23 @@ struct InverseCosineHyperOp
  * transformation.
  *
  * @tparam Expr Type of the expression
- * @param expr Expression to apply  inverse cosine hyperbolic to
- * @return ScalarUnaryOp< Expr, InverseCosineHyperOp > Expression that represents the inverse
+ * @param expr Expression to apply cosine hyperbolic to
+ * @return ScalarUnaryOp< Expr, CosineHyperOp > Expression that represents the
  * cosine operation
  */
 template< typename Expr >
-ScalarUnaryOp< Expr, InverseCosineHyperOp > acosh( const ScalarBase< Expr >& expr )
+ScalarUnaryOp< Expr, CosineHyperOp > cosh( const ScalarBase< Expr >& expr )
 {
-    return ScalarUnaryOp< Expr, InverseCosineHyperOp >(
-        static_cast< const Expr& >( expr ), InverseCosineHyperOp{} );
+    return ScalarUnaryOp< Expr, CosineHyperOp >(
+        static_cast< const Expr& >( expr ), CosineHyperOp{} );
 }
 
 
 /**
  * @brief Unary operation taken by \ref ScalarUnaryOp object to define the expression for
- * computing the inverse tangent hyperbolic of an expression.
+ * computing the tangent hyperbolic of an expression.
  */
-struct InverseTangentHyperOp
+struct TangentHyperOp
 {
     /**
      * @brief Applies the transformation on the value of an expression.
@@ -252,7 +249,7 @@ struct InverseTangentHyperOp
      */
     double applyToValue( double value ) const
     {
-        return std::atanh( value );
+        return std::tanh( value );
     }
 
     /**
@@ -262,7 +259,8 @@ struct InverseTangentHyperOp
      */
     double partial( double value ) const
     {
-        return 1.0 / ( 1.0 - value * value );
+        const double tmp = std::tanh( value );
+        return 1.0 - tmp * tmp;
     }
 };
 
@@ -272,17 +270,17 @@ struct InverseTangentHyperOp
  * transformation.
  *
  * @tparam Expr Type of the expression
- * @param expr Expression to apply inverse tangent hyperbolic to
- * @return ScalarUnaryOp< Expr, InverseTangentHyperOp > Expression that represents the inverse
+ * @param expr Expression to apply tangent hyperbolic to
+ * @return ScalarUnaryOp< Expr, TangentHyperOp > Expression that represents the
  * tangent operation
  */
 template< typename Expr >
-ScalarUnaryOp< Expr, InverseTangentHyperOp > atanh( const ScalarBase< Expr >& expr )
+ScalarUnaryOp< Expr, TangentHyperOp > tanh( const ScalarBase< Expr >& expr )
 {
-    return ScalarUnaryOp< Expr, InverseTangentHyperOp >(
-        static_cast< const Expr& >( expr ), InverseTangentHyperOp{} );
+    return ScalarUnaryOp< Expr, TangentHyperOp >(
+        static_cast< const Expr& >( expr ), TangentHyperOp{} );
 }
 
 } // metal
 
-#endif // METAL_UNARYINVERSETRIGONOP_H
+#endif // METAL_UNARYTRIGONOP_H

@@ -2,7 +2,7 @@
 #define METAL_NAMEDPARAMETER_H
 
 
-#include "Parameter.h"
+#include "src/Parameter.h"
 
 
 namespace metal

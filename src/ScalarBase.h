@@ -2,7 +2,7 @@
 #define METAL_SCALARBASE_H
 
 
-#include "Parameter.h"
+#include "src/Parameter.h"
 #include <exception>
 #include <iomanip>
 #include <iostream>

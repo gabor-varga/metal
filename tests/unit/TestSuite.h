@@ -2,7 +2,7 @@
 #define METAL_TEST_SUITE_H
 
 
-#include "Core.h"
+#include "src/Core.h"
 #include "catch.hpp"
 #include <random>
 

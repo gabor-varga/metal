@@ -2,7 +2,7 @@
 #define METAL_SCALARUNARYOP_H
 
 
-#include "ScalarBase.h"
+#include "src/ScalarBase.h"
 
 
 namespace metal

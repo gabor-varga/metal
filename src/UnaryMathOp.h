@@ -2,7 +2,7 @@
 #define METAL_UNARYMATHOP_H
 
 
-#include "ScalarUnaryOp.h"
+#include "src/ScalarUnaryOp.h"
 #include <cmath>
 
 

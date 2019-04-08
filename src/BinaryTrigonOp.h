@@ -2,7 +2,7 @@
 #define METAL_BINARYTRIGONOP_H
 
 
-#include "ScalarBinaryOp.h"
+#include "src/ScalarBinaryOp.h"
 #include <cmath>
 
 

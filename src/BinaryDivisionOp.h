@@ -2,7 +2,7 @@
 #define METAL_BINARYDIVISIONOP_H
 
 
-#include "ScalarBinaryOp.h"
+#include "src/ScalarBinaryOp.h"
 
 
 namespace metal

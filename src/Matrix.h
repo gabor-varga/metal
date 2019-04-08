@@ -2,7 +2,7 @@
 #define METAL_MATRIX_H
 
 
-#include "Core.h"
+#include "src/Core.h"
 #include <iomanip>
 
 #ifdef __clang__

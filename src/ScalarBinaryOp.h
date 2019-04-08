@@ -2,7 +2,7 @@
 #define METAL_SCALARBINARYOP_H
 
 
-#include "ScalarBase.h"
+#include "src/ScalarBase.h"
 #include <numeric>
 
 

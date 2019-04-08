@@ -8,7 +8,7 @@ warnings = -Weverything -Wno-c++98-compat -Wno-padded -fcomment-block-commands=c
 #compiler = g++
 #warnings = -Wall -Wextra
 
-includes = -I./include -I/usr/include/eigen3
+includes = -I/usr/include/eigen3
 flags = -g -std=c++11 $warnings $includes
 test_links = -L./build/tests/unit -Wl,-rpath=build/tests/unit -lcatch
 

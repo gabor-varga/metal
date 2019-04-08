@@ -2,8 +2,8 @@
 #define METAL_UNARYADDITIONOP_H
 
 
-#include "ScalarUnaryOp.h"
-#include "UnaryNegateOp.h"
+#include "src/ScalarUnaryOp.h"
+#include "src/UnaryNegateOp.h"
 
 
 namespace metal
