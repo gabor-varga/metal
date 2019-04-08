@@ -30,10 +30,10 @@ int main()
     u << -2.0, 3.0, -1.0;
 
 
-    const auto s = metal::create( v, "s" );
+    const auto s = metal::create< metal::NamedParameter >( v, true, "s" );
     std::cout << s << std::endl;
 
-    const auto r = metal::create( u, "r" );
+    const auto r = metal::create< metal::NamedParameter >( u, true, "r" );
     std::cout << r << std::endl;
 
     const metal::Scalar d = s.dot( r );
